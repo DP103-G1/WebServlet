@@ -1,0 +1,7 @@
+build/
+.classpath
+.project
+.settings/
+.DS_Store
+src/server_main/Common.java
+/bin/
