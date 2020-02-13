@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import Table_Web.Table;
 
 import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
@@ -32,19 +32,18 @@ public class BookingDaoMySQLImp implements BookingDao{
 	public int insert(Booking booking) {
 		int count = 0 ;
 		String sql = 
-		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?,?,?,?,?,?,?);";
+		"INSERT INTO BOOKING (TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?, ?, ?, ?, ?, ?);";
 		Connection connection =null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, "2");
-			ps.setString(2, booking.getTableId());
-			ps.setString(3, booking.getBkTime());
-			ps.setTimestamp(4, new Timestamp(booking.getBkDate().getTime()));
-			ps.setString(5, booking.getBkChild());
-			ps.setString(6, booking.getBkAdult());
-			ps.setString(7, booking.getBkPhone());
+			ps.setString(1, booking.getTableId());
+			ps.setString(2, booking.getBkTime());
+			ps.setTimestamp(3, new Timestamp(booking.getBkDate().getTime()));
+			ps.setString(4, booking.getBkChild());
+			ps.setString(5, booking.getBkAdult());
+			ps.setString(6, booking.getBkPhone());
 			System.out.println(booking);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -132,7 +131,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public List<Booking> getAll() {
-		String sql = "SELECT BK_ID, MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM EZeats.BOOKING ;";
+		String sql = "SELECT BK_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM EZeats.BOOKING ;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Booking> bookingList = new ArrayList<Booking>();
@@ -142,14 +141,13 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				String bkId = rs.getString(1);
-				String memberId = rs.getString(2);
-				String tableId = rs.getString(3);
-				String bkTime = rs.getString(4);
-				Date bkDate = rs.getDate(5);
-				String bkChild = rs.getString(6);
-				String bkAdult = rs.getString(7);
-				String bkPhone = rs.getString(8);
-				Booking booking = new Booking(bkId, memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				String tableId = rs.getString(2);
+				String bkTime = rs.getString(3);
+				Date bkDate = rs.getDate(4);
+				String bkChild = rs.getString(5);
+				String bkAdult = rs.getString(6);
+				String bkPhone = rs.getString(7);
+				Booking booking = new Booking(bkId,  tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
 				bookingList.add(booking);
 			}
 			return bookingList;
@@ -170,5 +168,44 @@ public class BookingDaoMySQLImp implements BookingDao{
 		return bookingList;
 	}
 
+	@Override
+	public List<Booking> getAllByMemberId(String memberId) {
+		String sql = "SELECT  BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE MEMBER_ID = ?;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		List<Booking> bookings = new ArrayList<Booking>();
+		try {
+			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,"2");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String bkId = rs.getString(1);
+				String tableId = rs.getString(2);
+				String bkTime = rs.getString(3);
+				Date bkDate = rs.getDate(4);
+				String bkChild = rs.getString(5);
+				String bkAdult = rs.getString(6);
+				String bkPhone = rs.getString(7);
+				Booking booking = new Booking(bkId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				bookings.add(booking);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return bookings;
+		
+	}
 	
 }

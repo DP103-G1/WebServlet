@@ -12,12 +12,11 @@ public class Booking {
 	private String bkAdult;
 	private String bkPhone;
 
-public Booking(String bkId, String memberId, String tableId, 
+public Booking(String bkId,String tableId, 
 		String bkTime, Date bkDate, String bkChild, String bkAdult,
 		String bkPhone) {
 	super();
 	this.bkId = bkId;
-	this.memberId = memberId;
 	this.tableId = tableId;
 	this.bkTime = bkTime;
 	this.bkDate = bkDate;

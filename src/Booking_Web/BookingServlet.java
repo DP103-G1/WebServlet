@@ -47,6 +47,11 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		int count = 0;
 		count = bookingDao.insert(booking);
 		writeText(response, String.valueOf(count));
+	}else if (action.equals("getAllByMemberId")) {
+		String memberId = jsonObject.get("memberId").getAsString();
+		List<Booking> bookings = bookingDao.getAllByMemberId(memberId);
+		writeText(response, gson.toJson(bookings));
+		
 	}else if(action.equals("bookingDelete")){
 		String bkId = jsonObject.get("bkId").getAsString();
 		int count = bookingDao.delete(bkId);
@@ -56,6 +61,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		String bkId = jsonObject.get("bkId").getAsString();
 		Booking booking = bookingDao.getbkId(bkId);
 		writeText(response, gson.toJson(booking));
+		
 	}else {
 		writeText(response, "");
 	}
