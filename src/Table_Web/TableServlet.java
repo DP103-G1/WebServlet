@@ -51,11 +51,11 @@ public class TableServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		}else if(action.equals("tableDelete")){
-			String tableId = jsonObject.get("tableId").getAsString();
+			int tableId = jsonObject.get("tableId").getAsInt();
 			int count = tableDao.deleteId(tableId);
 			writeText(response, String.valueOf(count));
 		}else if (action.equals("getTableId")) {
-			String tableId = jsonObject.get("tableId").getAsString();
+			int tableId = jsonObject.get("tableId").getAsInt();
 			Table table = tableDao.getTableId(tableId);
 			writeText(response, gson.toJson(table));
 		}else {

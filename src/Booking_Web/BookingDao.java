@@ -8,11 +8,11 @@ public interface BookingDao {
 	
 	int insert(Booking booking);
 	
-	int delete(String bkId);
+	int delete(int bkId);
 	
-	Booking getbkId(String bkId);
+	Booking getbkId(int bkId);
 	
 	List<Booking> getAll();
 	
-	List<Booking> getAllByMemberId(String memberId);
+	List<Booking> getAllByMemberId(int memberId);
 }

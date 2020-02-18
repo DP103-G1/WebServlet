@@ -53,7 +53,7 @@ public class MemberDaoMySqlImpl implements MemberDao {
 	@Override
 	public int update(Member member) {
 		int count = 0;
-		String sql = "PDATE `member` SET account = ?, password = ?, name = ?, "
+		String sql = "UPDATE `member` SET account = ?, password = ?, name = ?, "
 				+ "phone = ? WHERE member_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {

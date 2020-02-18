@@ -38,7 +38,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, t.getTableId());
+			ps.setInt(1, t.getTableId());
 			ps.setString(2, t.getTablePeople());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -69,7 +69,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, t.getTablePeople());
-			ps.setString(2,t.getTableId());
+			ps.setInt(2, t.getTableId());
 
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -90,7 +90,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 	}
 
 	@Override
-	public int deleteId(String tableId) {
+	public int deleteId(int tableId) {
 		int count = 0;
 		String sql = "DELETE FROM TABLE_DATA WHERE TABLE_ID = ?;";
 		Connection connection = null;
@@ -98,7 +98,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, tableId);
+			ps.setInt(1, tableId);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -118,7 +118,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 	}
  
 	@Override
-	public Table getTableId(String tableId) {
+	public Table getTableId(int tableId) {
 		String sql = "SELECT TABLE_ID,TABLE_PEOPLE,TABLE_STATUS FROM TABLE_DATA = ?; ";
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -126,10 +126,10 @@ public class TableDaoMySQLImp implements Table_Dao {
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps.getConnection().prepareStatement(sql);
-			ps.setString(1, tableId);
+			ps.setInt(1, tableId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				String tableId1 = rs.getString(1);
+				int tableId1 = rs.getInt(1);
 				String tablePeople = rs.getString(2);
 				int tableStatus = rs.getInt(3);
 				table = new Table(tableId1, tablePeople, tableStatus);
@@ -162,7 +162,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String tableId = rs.getString(1);
+				int tableId = rs.getInt(1);
 				String tablePeople = rs.getString(2);
 				Table table = new Table(tableId, tablePeople, 0);
 				tableList.add(table);

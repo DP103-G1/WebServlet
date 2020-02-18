@@ -48,17 +48,17 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		count = bookingDao.insert(booking);
 		writeText(response, String.valueOf(count));
 	}else if (action.equals("getAllByMemberId")) {
-		String memberId = jsonObject.get("memberId").getAsString();
+		int memberId = jsonObject.get("memberId").getAsInt();
 		List<Booking> bookings = bookingDao.getAllByMemberId(memberId);
 		writeText(response, gson.toJson(bookings));
 		
 	}else if(action.equals("bookingDelete")){
-		String bkId = jsonObject.get("bkId").getAsString();
+		int bkId = jsonObject.get("bkId").getAsInt();
 		int count = bookingDao.delete(bkId);
 		writeText(response, String.valueOf(count));
 		
 	}else if(action.equals("getbkId")){
-		String bkId = jsonObject.get("bkId").getAsString();
+		int bkId = jsonObject.get("bkId").getAsInt();
 		Booking booking = bookingDao.getbkId(bkId);
 		writeText(response, gson.toJson(booking));
 		

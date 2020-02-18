@@ -3,20 +3,22 @@ package Booking_Web;
 import java.util.Date;
 
 public class Booking {
-	private String bkId;
-	private String memberId;
-	private String tableId;
+	
+	private int memberId;
+	private int tableId;
 	private String bkTime;
 	private Date bkDate;
 	private String bkChild;
 	private String bkAdult;
 	private String bkPhone;
-
-public Booking(String bkId,String tableId, 
+	private int bkId;
+	
+public Booking(int memberId, int tableId, 
 		String bkTime, Date bkDate, String bkChild, String bkAdult,
 		String bkPhone) {
+	
 	super();
-	this.bkId = bkId;
+	this.memberId = memberId;
 	this.tableId = tableId;
 	this.bkTime = bkTime;
 	this.bkDate = bkDate;
@@ -29,16 +31,20 @@ public Booking(String bkId,String tableId,
 
 
 
-public Booking( String tableId, String bkTime, Date bkDate, String bkChild, String bkAdult,
-		String bkPhone) {
+public Booking( int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult,
+		String bkPhone,int bkId) {
 	super();
+	
 	this.tableId = tableId;
 	this.bkTime = bkTime;
 	this.bkDate = bkDate;
 	this.bkChild = bkChild;
 	this.bkAdult = bkAdult;
 	this.bkPhone = bkPhone;
+	this.bkId=bkId;
 }
+
+
 
 
 
@@ -50,27 +56,27 @@ public String toString() {
 
 
 
-public String getBkId() {
+public int getBkId() {
 	return bkId;
 }
 
-public void setBkId(String bkId) {
+public void setBkId(int bkId) {
 	this.bkId = bkId;
 }
 
-public String getMemberId() {
+public int getMemberId() {
 	return memberId;
 }
 
-public void setMemberId(String memberId) {
+public void setMemberId(int memberId) {
 	this.memberId = memberId;
 }
 
-public String getTableId() {
+public int getTableId() {
 	return tableId;
 }
 
-public void setTableId(String tableId) {
+public void setTableId(int tableId) {
 	this.tableId = tableId;
 }
 

@@ -32,18 +32,19 @@ public class BookingDaoMySQLImp implements BookingDao{
 	public int insert(Booking booking) {
 		int count = 0 ;
 		String sql = 
-		"INSERT INTO BOOKING (TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?, ?, ?, ?, ?, ?);";
+		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?,?, ?, ?, ?, ?, ?);";
 		Connection connection =null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, booking.getTableId());
-			ps.setString(2, booking.getBkTime());
-			ps.setTimestamp(3, new Timestamp(booking.getBkDate().getTime()));
-			ps.setString(4, booking.getBkChild());
-			ps.setString(5, booking.getBkAdult());
-			ps.setString(6, booking.getBkPhone());
+			ps.setInt(1, booking.getMemberId());
+			ps.setInt(2, booking.getTableId());
+			ps.setString(3, booking.getBkTime());
+			ps.setTimestamp(4, new Timestamp(booking.getBkDate().getTime()));
+			ps.setString(5, booking.getBkChild());
+			ps.setString(6, booking.getBkAdult());
+			ps.setString(7, booking.getBkPhone());
 			System.out.println(booking);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -66,7 +67,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 
 	@Override
-	public int delete(String bkId) {
+	public int delete(int bkId) {
 		int count = 0 ;
 		String sql = "DELETE FROM BOOKING WHERE BOOKING_ID = ?";
 		Connection connection = null;
@@ -74,7 +75,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, bkId);
+			ps.setInt(1, bkId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -93,24 +94,25 @@ public class BookingDaoMySQLImp implements BookingDao{
 	}
 
 	@Override
-	public Booking getbkId(String bkId) {
-		String sql = "SELECT  TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE BK_ID = ?;";
+	public Booking getbkId(int bkId) {
+		String sql = "SELECT MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE BK_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Booking booking = null;
 		try {
 			conn = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, bkId);
+			ps.setInt(1, bkId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				String tableId = rs.getString(1);
-				String bkTime = rs.getString(2);
-				Date bkDate = rs.getDate(3);
-				String bkChild = rs.getString(4);
-				String bkAdult = rs.getString(5);
-				String bkPhone = rs.getString(6);
-				booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				int memberId = rs.getInt(1);
+				int tableId = rs.getInt(2);
+				String bkTime = rs.getString(3);
+				Date bkDate = rs.getDate(4);
+				String bkChild = rs.getString(5);
+				String bkAdult = rs.getString(6);
+				String bkPhone = rs.getString(7);
+				booking = new Booking(memberId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,8 +142,8 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				String bkId = rs.getString(1);
-				String tableId = rs.getString(2);
+				int bkId = rs.getInt(1);
+				int tableId = rs.getInt(2);
 				String bkTime = rs.getString(3);
 				Date bkDate = rs.getDate(4);
 				String bkChild = rs.getString(5);
@@ -169,25 +171,25 @@ public class BookingDaoMySQLImp implements BookingDao{
 	}
 
 	@Override
-	public List<Booking> getAllByMemberId(String memberId) {
-		String sql = "SELECT  BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE MEMBER_ID = ?;";
+	public List<Booking> getAllByMemberId(int memberId) {
+		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE MEMBER_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
 		try {
 			conn = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setString(1,"2");
+			ps.setInt(1,memberId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String bkId = rs.getString(1);
-				String tableId = rs.getString(2);
+				int bkId = rs.getInt(1);
+				int tableId = rs.getInt(2);
 				String bkTime = rs.getString(3);
 				Date bkDate = rs.getDate(4);
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-				Booking booking = new Booking(bkId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				Booking booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId);
 				bookings.add(booking);
 			}
 		} catch (SQLException e) {
