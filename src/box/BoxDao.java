@@ -36,7 +36,7 @@ public class BoxDao implements Dao<Box>{
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1,2);
+			ps.setInt(1,box.getId());
 			ps.setString(2, box.getTopic());
 			ps.setString(3, box.getPurpose());
 			ps.setString(4, box.getInfo());
