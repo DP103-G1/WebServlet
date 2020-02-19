@@ -31,6 +31,25 @@ public Booking(int memberId, int tableId,
 
 
 
+
+public Booking(int memberId, int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult, String bkPhone,
+		int bkId) {
+	super();
+	this.memberId = memberId;
+	this.tableId = tableId;
+	this.bkTime = bkTime;
+	this.bkDate = bkDate;
+	this.bkChild = bkChild;
+	this.bkAdult = bkAdult;
+	this.bkPhone = bkPhone;
+	this.bkId = bkId;
+}
+
+
+
+
+
+
 public Booking( int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult,
 		String bkPhone,int bkId) {
 	super();

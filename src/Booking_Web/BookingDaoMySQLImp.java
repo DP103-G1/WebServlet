@@ -105,6 +105,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ps.setInt(1, bkId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
+	
 				int memberId = rs.getInt(1);
 				int tableId = rs.getInt(2);
 				String bkTime = rs.getString(3);
@@ -133,7 +134,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public List<Booking> getAll() {
-		String sql = "SELECT BK_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM EZeats.BOOKING ;";
+		String sql = "SELECT BK_ID,MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM EZeats.BOOKING ;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Booking> bookingList = new ArrayList<Booking>();
@@ -143,16 +144,19 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				int bkId = rs.getInt(1);
-				int tableId = rs.getInt(2);
-				String bkTime = rs.getString(3);
-				Date bkDate = rs.getDate(4);
-				String bkChild = rs.getString(5);
-				String bkAdult = rs.getString(6);
-				String bkPhone = rs.getString(7);
-				Booking booking = new Booking(bkId,  tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				int memberId = rs.getInt(2);
+				int tableId = rs.getInt(3);
+				String bkTime = rs.getString(4);
+				Date bkDate = rs.getDate(5);
+				String bkChild = rs.getString(6);
+				String bkAdult = rs.getString(7);
+				String bkPhone = rs.getString(8);
+				
+				Booking booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
 				bookingList.add(booking);
 			}
-			return bookingList;
+			
+				return bookingList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
