@@ -1,5 +1,6 @@
 package employee;
 
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,15 +32,31 @@ public class EmployeeServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
+		System.out.println(jsonIn.toString());
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if(employeeDao == null) {
 			employeeDao = new EmployeeMySqlImp();
 		}
 		String action = jsonObject.get("action").getAsString();
-		if(action.equals("employeeUpdate")) {
-			
+		if (action.equals("updatePassword")) {
+			int count = 0;
+			int employee_Id = jsonObject.get("employee_Id").getAsInt();
+			String password = jsonObject.get("password").getAsString();
+			count = employeeDao.updatePassword(employee_Id, password);
+			writeText(response, String.valueOf(count));
+			}
+		else if (action.equals("login")) {
+				String account = jsonObject.get("account").getAsString();
+				String password = jsonObject.get("password").getAsString();
+				writeText(response, employeeDao.login(account, password));
+			}else if(action.equals("getAll")){
+				List<Employee> employees = employeeDao.getAll();
+				writeText(response, gson.toJson(employees));
+			}else {
+				writeText(response, "");
+			}
 		}
-	}
+	
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
@@ -50,7 +67,12 @@ public class EmployeeServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		if (employeeDao == null) {
+			employeeDao = new EmployeeMySqlImp();
+		}
+		List<Employee> employeeDatas = employeeDao.getAll();
+		writeText(response, new Gson().toJson(employeeDatas));
+		
 	}
 
 

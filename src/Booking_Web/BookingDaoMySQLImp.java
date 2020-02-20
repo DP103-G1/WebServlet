@@ -151,7 +151,6 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(6);
 				String bkAdult = rs.getString(7);
 				String bkPhone = rs.getString(8);
-				
 				Booking booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
 				bookingList.add(booking);
 			}
