@@ -207,7 +207,7 @@ public class MenuDaoMySQL implements MenuDao {
 	
 	@Override
 	public List<Menu> getAllShow() {
-		String sql = "SELECT MENU_ID, FOOD_NAME, FOOD_PRICE FROM MENU WHERE FOOD_STATUS = 1;";
+		String sql = "SELECT MENU_ID, FOOD_NAME, FOOD_PRICE, FOOD_CONTENT FROM MENU WHERE FOOD_STATUS = 1;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Menu> menuList = new ArrayList<Menu>();
@@ -219,7 +219,8 @@ public class MenuDaoMySQL implements MenuDao {
 				String MENU_ID = rs.getString(1);
 				String FOOD_NAME = rs.getString(2);
 				int FOOD_PRICE = rs.getInt(3);
-				Menu menu = new Menu(MENU_ID, FOOD_NAME, FOOD_PRICE, 1, null);
+				String FOOD_CONTENT = rs.getString(4);
+				Menu menu = new Menu(MENU_ID, FOOD_NAME, FOOD_PRICE, 1, FOOD_CONTENT);
 				menuList.add(menu);
 			}
 			return menuList;

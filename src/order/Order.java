@@ -25,6 +25,16 @@ public class Order {
 		this.ORD_STATUS = ORD_STATUS;
 		this.ORD_BILL = ORD_BILL;
 	}
+	
+	public Order(int ORD_ID, int TABLE_ID, boolean TABLE_BELL, int ORD_TOTAL,
+			boolean ORD_STATUS, boolean ORD_BILL) {
+		this.ORD_ID = ORD_ID;
+		this.TABLE_ID = TABLE_ID;
+		this.TABLE_BELL = TABLE_BELL;
+		this.ORD_TOTAL = ORD_TOTAL;
+		this.ORD_STATUS = ORD_STATUS;
+		this.ORD_BILL = ORD_BILL;
+	}
 
 	public Order(int ORD_ID, int MEMBER_ID, int TABLE_ID, boolean TABLE_BELL, int ORD_TOTAL,
 			boolean ORD_STATUS, boolean ORD_BILL, List<MenuDetail> menuDetails) {
