@@ -96,16 +96,20 @@ public class EmployeeMySqlImp implements EmployeeDao{
 	@Override
 	public String login(String account, String password) {
 		String employeeId = null;
-		String sql = "SELECT EMPLOYEE_ID, PASSWORD FROM `EMPLOYEE` WHERE ACCOUNT = ?;";
+		String sql = "SELECT EMPLOYEE_ID FROM `EMPLOYEE` WHERE ACCOUNT = ? AND PASSWORD = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
+		
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, account);
+			ps.setString(2, password);
+			System.out.println(ps);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next() && rs.getString(2).equals(password)) {
+			if (rs.next()) {
 				employeeId = rs.getString(1);
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
