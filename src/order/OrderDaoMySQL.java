@@ -43,8 +43,8 @@ public class OrderDaoMySQL implements OrderDao {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			connection.setAutoCommit(false);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, order.getMEMBER_ID());
-			ps.setString(2, order.getTABLE_ID());
+			ps.setInt(1, order.getMEMBER_ID());
+			ps.setInt(2, order.getTABLE_ID());
 			ps.setInt(3, order.getORD_TOTAL());
 			ps.setBoolean(4, order.isORD_STATUS());
 			ps.setBoolean(5, order.isORD_BILL());
@@ -113,8 +113,8 @@ public class OrderDaoMySQL implements OrderDao {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, order.getMEMBER_ID());
-			ps.setString(2, order.getTABLE_ID());
+			ps.setInt(1, order.getMEMBER_ID());
+			ps.setInt(2, order.getTABLE_ID());
 			ps.setBoolean(3, order.isTABLE_BELL());
 			ps.setInt(4, order.getORD_TOTAL());
 			ps.setBoolean(5, order.isORD_STATUS());
@@ -150,8 +150,8 @@ public class OrderDaoMySQL implements OrderDao {
 			ps.setInt(1, ord_id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				String MEMBER_ID = rs.getString(1);
-				String TABLE_ID = rs.getString(2);
+				int MEMBER_ID = rs.getInt(1);
+				int TABLE_ID = rs.getInt(2);
 				Boolean TABLE_BELL = rs.getBoolean(3);
 				int ORD_TOTAL = rs.getInt(4);
 				Boolean ORD_STATUS = rs.getBoolean(5);
@@ -187,8 +187,8 @@ public class OrderDaoMySQL implements OrderDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
-				String MEMBER_ID = rs.getString(2);
-				String TABLE_ID = rs.getString(3);
+				int MEMBER_ID = rs.getInt(2);
+				int TABLE_ID = rs.getInt(3);
 				boolean TABLE_BELL = rs.getBoolean(4);
 				int ORD_TOTAL = rs.getInt(5);
 				boolean ORD_STATUS = rs.getBoolean(6);

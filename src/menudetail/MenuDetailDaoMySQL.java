@@ -104,4 +104,49 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 		return detaiList;
 	}
 
+	@Override
+	public List<MenuDetail> getAllByMemberId(int memberId) {
+		String sql = "SELECT d.ORD_ID, TABLE_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
+				"FROM MENU_DETAIL d " +
+				"join MENU m on d.MENU_ID = m.MENU_ID " + 
+				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
+				"WHERE MEMBER_ID = ?;";
+//		String sql = "SELECT d.ORD_ID, TABLE_ID, d.MENU_ID, FOOD_NAME, FOOD_IMAGE, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS FROM MENU_DETAIL d join MENU m on d.MENU_ID = m.MENU_ID join ORDER_MEAL o on d.ORD_ID = o.ORD_ID WHERE MEMBER_ID = ?;\n" ;
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<MenuDetail> detas = new ArrayList<MenuDetail>();
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1,memberId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int ORD_ID = rs.getInt(1);
+				int TABLE_ID = rs.getInt(2);
+				String MENU_ID = rs.getString(3);
+				String FOOD_NAME = rs.getString(4);
+				int FOOD_AMOUNT = rs.getInt(5);
+				boolean FOOD_ARRIVAL = rs.getBoolean(6);
+				int TOTAL = rs.getInt(7);
+				boolean FOOD_STATUS = rs.getBoolean(8);
+				MenuDetail menuDetail = new MenuDetail(ORD_ID, TABLE_ID, MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
+				detas.add(menuDetail);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return detas;
+	}
+
 }
