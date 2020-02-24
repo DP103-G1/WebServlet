@@ -44,6 +44,10 @@ public class OrderServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<Order> order = orderDao.getAll();
 			writeText(response, gson.toJson(order));
+		} else if(action.equals("getAllByMemberId")) {
+			int memberId = jsonObject.get("memberId").getAsInt();
+			List<Order> orders = orderDao.getAllByMemberId(memberId);
+			writeText(response, gson.toJson(orders));
 		} else if (action.equals("add") || action.equals("update")) {
 			String orderJson = jsonObject.get("order").getAsString();
 			System.out.println("orderJson =" + orderJson);
