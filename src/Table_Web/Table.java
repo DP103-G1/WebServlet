@@ -5,14 +5,14 @@ public class Table {
 	
 	private int tableId;
 	private String tablePeople;
-	private int tableStatus;
 	
 	
-	public Table(int tableId, String tablePeople, int tableStatus) {
+	
+	public Table(int tableId, String tablePeople) {
 		super();
 		this.tableId = tableId;
 		this.tablePeople = tablePeople;
-		this.tableStatus = tableStatus;
+		
 		
 	}
 	
@@ -48,15 +48,5 @@ public class Table {
 		this.tablePeople = tablePeople;
 	}
 
-	public int getTableStatus() {
-		return tableStatus;
-	}
-
-	public void setTableStatus(int tableStatus) {
-		this.tableStatus = tableStatus;
-	}
-
-	
-	
 	
 }

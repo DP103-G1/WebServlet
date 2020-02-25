@@ -119,7 +119,7 @@ public class TableDaoMySQLImp implements Table_Dao {
  
 	@Override
 	public Table getTableId(int tableId) {
-		String sql = "SELECT TABLE_ID,TABLE_PEOPLE,TABLE_STATUS FROM TABLE_DATA = ?; ";
+		String sql = "SELECT TABLE_ID,TABLE_PEOPLE FROM TABLE_DATA = ?; ";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Table table = null;
@@ -131,8 +131,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 			if (rs.next()) {
 				int tableId1 = rs.getInt(1);
 				String tablePeople = rs.getString(2);
-				int tableStatus = rs.getInt(3);
-				table = new Table(tableId1, tablePeople, tableStatus);
+				table = new Table(tableId1, tablePeople);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -153,7 +152,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 
 	@Override
 	public List<Table> getAll() {
-		String sql = "SELECT TABLE_ID ,TABLE_PEOPLE,TABLE_STATUS FROM TABLE_DATA ORDER BY TABLE_ID;";
+		String sql = "SELECT TABLE_ID ,TABLE_PEOPLE FROM TABLE_DATA ORDER BY TABLE_ID;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Table> tableList = new ArrayList<Table>();
@@ -164,7 +163,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 			while (rs.next()) {
 				int tableId = rs.getInt(1);
 				String tablePeople = rs.getString(2);
-				Table table = new Table(tableId, tablePeople, 0);
+				Table table = new Table(tableId, tablePeople);
 				tableList.add(table);
 			}
 			return tableList;
