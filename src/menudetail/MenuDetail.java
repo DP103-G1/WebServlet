@@ -3,8 +3,9 @@ package menudetail;
 public class MenuDetail {
 
 	private int ORD_ID;
-	private int TABLE_ID;
+	private int BK_ID;
 	private String MENU_ID;
+	private int TABLE_ID;
 	private String FOOD_NAME;
 	private int FOOD_AMOUNT;
 	private boolean FOOD_ARRIVAL;
@@ -33,10 +34,10 @@ public class MenuDetail {
 		this(0, MENU_ID, FOOD_AMOUNT, false, TOTAL, false);
 	}
 	
-	public MenuDetail(int ORD_ID, int TABLE_ID, String MENU_ID, String FOOD_NAME, int FOOD_AMOUNT, boolean FOOD_ARRIVAL, int TOTAL, boolean FOOD_STATUS) {
+	public MenuDetail(int ORD_ID, String MENU_ID, int TABLE_ID, String FOOD_NAME, int FOOD_AMOUNT, boolean FOOD_ARRIVAL, int TOTAL, boolean FOOD_STATUS) {
 		this.ORD_ID = ORD_ID;
-		this.TABLE_ID = TABLE_ID;
 		this.MENU_ID = MENU_ID;
+		this.TABLE_ID = TABLE_ID;
 		this.FOOD_NAME = FOOD_NAME;
 		this.FOOD_AMOUNT = FOOD_AMOUNT;
 		this.FOOD_ARRIVAL = FOOD_ARRIVAL;
@@ -122,12 +123,12 @@ public class MenuDetail {
 		FOOD_STATUS = food_status;
 	}
 
-	public int getTABLE_ID() {
-		return TABLE_ID;
+	public int getBK_ID() {
+		return BK_ID;
 	}
 
-	public void setTABLE_ID(int table_id) {
-		TABLE_ID = table_id;
+	public void setBK_ID(int bk_id) {
+		BK_ID = bk_id;
 	}
 
 	public String getFOOD_NAME() {
@@ -136,6 +137,14 @@ public class MenuDetail {
 
 	public void setFOOD_NAME(String food_name) {
 		FOOD_NAME = food_name;
+	}
+
+	public int getTABLE_ID() {
+		return TABLE_ID;
+	}
+
+	public void setTABLE_ID(int table_id) {
+		TABLE_ID = table_id;
 	}
 
 

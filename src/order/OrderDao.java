@@ -11,5 +11,7 @@ public interface OrderDao {
 		int add(Order order);
 		
 		int update(Order order);
+		
+		List<Order> getAllByMemberId(int memberId);
 				
 }
