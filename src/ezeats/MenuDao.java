@@ -16,5 +16,9 @@ public interface MenuDao {
 
 	byte[] getImage(String menu_id);
 	
+	List<byte[]> getImageList();
+	
+	 
+
 	
 }
