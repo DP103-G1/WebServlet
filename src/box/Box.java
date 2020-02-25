@@ -10,6 +10,7 @@ public class Box {
     private Float satisfied;
     private String feed_back;
     private String reply;
+    
 	public Box(int id, int member, String topic, String purpose, String info, String date, Float satisfied, String feed_back, String reply) {
 		super();
 		this.id = id;
