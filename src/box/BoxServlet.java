@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import com.google.gson.Gson;
-
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings("serial")
@@ -25,7 +25,7 @@ public class BoxServlet extends HttpServlet {
    
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		BufferedReader br = request.getReader();
 		StringBuilder jsonIn = new StringBuilder();
 		String line = null;
@@ -33,7 +33,7 @@ public class BoxServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 		// 將輸入資料列印出來除錯用
-	   // System.out.println("input: " + jsonIn);
+	    System.out.println("input: " + jsonIn);
 		
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (dao == null) {

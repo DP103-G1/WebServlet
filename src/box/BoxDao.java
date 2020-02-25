@@ -29,21 +29,20 @@ public class BoxDao implements Dao<Box>{
 	@Override
 	public int add(Box box) {
 		int count = 0;
-		String sql = "INSERT into SUG_BOX (MEMBER_ID,TOPIC,PURPOSE,INFO_SOURCE,DATE,SATISFIED,FEED_BACK,REPLY) "+
-				"VALUES(?,?,?,?,?,?,?,?);";
+		String sql = "INSERT into SUG_BOX (MEMBER_ID,TOPIC,PURPOSE,INFO_SOURCE,DATE,SATISFIED,FEED_BACK) "+
+				"VALUES(?,?,?,?,?,?,?);";
 		Connection connection = null;
 		PreparedStatement ps= null;
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1,box.getId());
+			ps.setInt(1,box.getMember());
 			ps.setString(2, box.getTopic());
 			ps.setString(3, box.getPurpose());
 			ps.setString(4, box.getInfo());
 			ps.setString(5, box.getDate());
 			ps.setFloat(6, box.getSatisfied());
 			ps.setString(7, box.getFeed_back());
-			ps.setString(8, box.getReply());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,20 +64,21 @@ public class BoxDao implements Dao<Box>{
 	@Override
 	public int update(String id, Box box) {
 		int count = 0;
-		String sql = "UPDATE box SET TOPIC = ?,PURPOSE = ?,IFO_SOURCE =?,DATE = ?,SATISFIED = ?,FEED_BACK = ?,REPLY = ?,WHERE id = ?;"; 
+		String sql = "UPDATE SUG_BOX SET TOPIC = ?, PURPOSE = ?, INFO_SOURCE = ?, DATE = ?, "
+				+ "SATISFIED = ?, FEED_BACK = ?, REPLY = ? WHERE SUG_ID = ?;"; 
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, box.getId());
-			ps.setString(2, box.getTopic());
-			ps.setString(3, box.getPurpose());
-			ps.setString(4, box.getInfo());
-			ps.setString(5, box.getDate());
-			ps.setFloat(6, box.getSatisfied());
-			ps.setString(7, box.getFeed_back());
-			ps.setString(8, box.getReply());
+			ps.setString(1, box.getTopic());
+			ps.setString(2, box.getPurpose());
+			ps.setString(3, box.getInfo());
+			ps.setString(4, box.getDate());
+			ps.setFloat(5, box.getSatisfied());
+			ps.setString(6, box.getFeed_back());
+			ps.setString(7, box.getReply());
+			ps.setInt(8, box.getId());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
