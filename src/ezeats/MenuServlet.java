@@ -1,10 +1,11 @@
 package ezeats;
 
-
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
+import server_main.ImageUtil;
 
 @SuppressWarnings("serial")
 @WebServlet("/MenuServlet")
@@ -48,20 +51,22 @@ public class MenuServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<Menu> menu = menuDao.getAll();
 			writeText(response, gson.toJson(menu));
-		}else if (action.equals("getAllShow")) {
+		} else if (action.equals("getAllShow")) {
 			List<Menu> menu = menuDao.getAllShow();
 			writeText(response, gson.toJson(menu));
+
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			String menu_id = jsonObject.get("id").getAsString();
 			int imageSize = jsonObject.get("imageSize").getAsInt();
 			byte[] image = menuDao.getImage(menu_id);
 			if (image != null) {
-//				image = ImageUtil.shrink(image, imageSize);
+				image = ImageUtil.shrink(image, imageSize);
 				response.setContentType("image/jpeg");
 				response.setContentLengthLong(image.length);
 				os.write(image);
 			}
+
 		} else if (action.equals("add") || action.equals("update")) {
 			String menuJson = jsonObject.get("menu").getAsString();
 			System.out.print("menuJson =" + menuJson);
@@ -80,20 +85,39 @@ public class MenuServlet extends HttpServlet {
 				count = menuDao.update(menu, image);
 			}
 			writeText(response, String.valueOf(count));
-		} else if (action.equals("getId")) {
+		}
+
+		else if (action.equals("getId")) {
 			String id = jsonObject.get("MENU_ID").getAsString();
 			Menu menu = menuDao.getId(id);
 			writeText(response, gson.toJson(menu));
+		}
+
+		else if (action.equals("getImageList")) {
+			List<byte[]> images = menuDao.getImageList();
+			List<String> base64Images = getBase64Images(images);
+			if (base64Images != null) {
+				writeText(response, gson.toJson(base64Images));
+			}
 		} else {
 			writeText(response, "");
 		}
+	}
+
+	private List<String> getBase64Images(List<byte[]> images) {
+		List<String> base64Images = new ArrayList<>();
+		for (byte[] image : images) {
+			String base64Image = Base64.getMimeEncoder().encodeToString(image);
+			base64Images.add(base64Image);
+		}
+		return base64Images;
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

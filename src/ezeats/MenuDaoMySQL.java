@@ -5,6 +5,7 @@ import static server_main.Common.URL;
 import static server_main.Common.USER;
 import static server_main.Common.PASSWORD;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -134,6 +135,37 @@ public class MenuDaoMySQL implements MenuDao {
 	}
 
 	@Override
+	public List<byte[]> getImageList() {
+		String sql = "SELECT FOOD_IMAGE FROM MENU ORDER BY rand() limit 5;";
+		Connection connection = null;
+		List<byte[]> images = new ArrayList<>();
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				byte[] image = rs.getBytes(1);
+				images.add(image);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return images;
+	}
+
+	@Override
 	public Menu getId(String menu_id) {
 		String sql = "SELECT FOOD_NAME, FOOD_PRICE, FOOD_STATUS, FOOD_CONTENT FROM Menu WHERE MENU_ID = ?;";
 		Connection conn = null;
@@ -204,7 +236,7 @@ public class MenuDaoMySQL implements MenuDao {
 		}
 		return menuList;
 	}
-	
+
 	@Override
 	public List<Menu> getAllShow() {
 		String sql = "SELECT MENU_ID, FOOD_NAME, FOOD_PRICE FROM MENU WHERE FOOD_STATUS = 1;";
@@ -239,4 +271,5 @@ public class MenuDaoMySQL implements MenuDao {
 		}
 		return menuList;
 	}
+
 }
