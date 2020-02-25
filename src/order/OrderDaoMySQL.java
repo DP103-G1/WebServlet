@@ -11,8 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import Booking_Web.Booking;
 import menudetail.MenuDetail;
 
 public class OrderDaoMySQL implements OrderDao {
@@ -246,5 +248,37 @@ public class OrderDaoMySQL implements OrderDao {
 			}
 		}
 		return orders;
+	}
+
+	@Override
+	public int getBkid(int memberId) {
+		String sql = "SELECT BK_ID FROM EZeats.BOOKING where MEMBER_ID = ? order by BK_DATE desc limit 1;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		int bkId = -1;
+		try {
+			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1,memberId);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				bkId = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return bkId;
+		
 	}
 }

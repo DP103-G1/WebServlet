@@ -42,8 +42,8 @@ public class OrderServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			List<Order> order = orderDao.getAll();
-			writeText(response, gson.toJson(order));
+			List<Order> orders = orderDao.getAll();
+			writeText(response, gson.toJson(orders));
 		} else if(action.equals("getAllByMemberId")) {
 			int memberId = jsonObject.get("memberId").getAsInt();
 			List<Order> orders = orderDao.getAllByMemberId(memberId);
@@ -54,6 +54,8 @@ public class OrderServlet extends HttpServlet {
 			Order order = gson.fromJson(orderJson, Order.class);
 			int count = 0;
 			if (action.equals("add")) {
+				int bkid = orderDao.getBkid(order.getMEMBER_ID());
+				order.setBK_ID(bkid);
 				count = orderDao.add(order);
 			} else if (action.equals("update")) {
 				count = orderDao.update(order);
