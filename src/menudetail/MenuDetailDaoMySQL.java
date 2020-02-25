@@ -63,10 +63,11 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 	@Override
 	public List<MenuDetail> getAll() {
 //		String sql = "SELECT ORD_ID, MENU_ID, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS FROM MENU_DETAIL;";
-		String sql = "SELECT d.ORD_ID, TABLE_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
+		String sql = "SELECT d.ORD_ID, d.MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
 				"FROM MENU_DETAIL d " + 
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
-				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID;";
+				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
+				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID; ";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detaiList = new ArrayList<MenuDetail>();
@@ -76,14 +77,14 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
-				int TABLE_ID = rs.getInt(2);
-				String MENU_ID = rs.getString(3);
+				String MENU_ID = rs.getString(2);
+				int TABLE_ID = rs.getInt(3);
 				String FOOD_NAME = rs.getString(4);
 				int FOOD_AMOUNT = rs.getInt(5);
 				boolean FOOD_ARRIVAL = rs.getBoolean(6);
 				int TOTAL = rs.getInt(7);
 				boolean FOOD_STATUS = rs.getBoolean(8);
-				MenuDetail menuDetail = new MenuDetail(ORD_ID, TABLE_ID, MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
+				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
 				detaiList.add(menuDetail);
 			}
 			return detaiList;
@@ -106,12 +107,12 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 
 	@Override
 	public List<MenuDetail> getAllByMemberId(int memberId) {
-		String sql = "SELECT d.ORD_ID, TABLE_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
+		String sql = "SELECT d.ORD_ID, d.MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
 				"FROM MENU_DETAIL d " +
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
-				"WHERE MEMBER_ID = ?;";
-//		String sql = "SELECT d.ORD_ID, TABLE_ID, d.MENU_ID, FOOD_NAME, FOOD_IMAGE, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS FROM MENU_DETAIL d join MENU m on d.MENU_ID = m.MENU_ID join ORDER_MEAL o on d.ORD_ID = o.ORD_ID WHERE MEMBER_ID = ?;\n" ;
+				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " + 
+				"WHERE o.MEMBER_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detas = new ArrayList<MenuDetail>();
@@ -122,14 +123,14 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
-				int TABLE_ID = rs.getInt(2);
-				String MENU_ID = rs.getString(3);
+				String MENU_ID = rs.getString(2);
+				int TABLE_ID = rs.getInt(3);
 				String FOOD_NAME = rs.getString(4);
 				int FOOD_AMOUNT = rs.getInt(5);
 				boolean FOOD_ARRIVAL = rs.getBoolean(6);
 				int TOTAL = rs.getInt(7);
 				boolean FOOD_STATUS = rs.getBoolean(8);
-				MenuDetail menuDetail = new MenuDetail(ORD_ID, TABLE_ID, MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
+				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
 				detas.add(menuDetail);
 			}
 		} catch (SQLException e) {

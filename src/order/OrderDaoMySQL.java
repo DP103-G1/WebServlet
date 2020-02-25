@@ -29,7 +29,7 @@ public class OrderDaoMySQL implements OrderDao {
 	public int add(Order order) {
 		int count = 0;
 		String sql = "INSERT INTO `ORDER_MEAL` "
-				+ "(MEMBER_ID, TABlE_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL) "
+				+ "(MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL) "
 				+ "VALUES(?, ?, ?, ?, ?);";
 		String sqlMenuDetail = "INSERT INTO `MENU_DETAIL`(ORD_ID, MENU_ID, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS) "
 				+ " VALUES (?, ?, ?, ?, ?, ?);";
@@ -44,7 +44,7 @@ public class OrderDaoMySQL implements OrderDao {
 			connection.setAutoCommit(false);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, order.getMEMBER_ID());
-			ps.setInt(2, order.getTABLE_ID());
+			ps.setInt(2, order.getBK_ID());
 			ps.setInt(3, order.getORD_TOTAL());
 			ps.setBoolean(4, order.isORD_STATUS());
 			ps.setBoolean(5, order.isORD_BILL());
@@ -106,19 +106,18 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int update(Order order) {
 		int count = 0;
-		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, TABLE_ID = ?,"
-				+ "TABLE_BELL = ?, ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID";
+		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, BK_ID = ?,"
+				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, order.getMEMBER_ID());
-			ps.setInt(2, order.getTABLE_ID());
-			ps.setBoolean(3, order.isTABLE_BELL());
-			ps.setInt(4, order.getORD_TOTAL());
-			ps.setBoolean(5, order.isORD_STATUS());
-			ps.setBoolean(6, order.isORD_BILL());
+			ps.setInt(2, order.getBK_ID());
+			ps.setInt(3, order.getORD_TOTAL());
+			ps.setBoolean(4, order.isORD_STATUS());
+			ps.setBoolean(5, order.isORD_BILL());
 			count = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,7 +138,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public Order getId(int ord_id) {
-		String sql = "SELECT MEMBER_ID, TABLE_ID, TABLE_BELL, ORD_TOTAL, ORD_STATUS, ORD_BILL"
+		String sql = "SELECT MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL"
 				+ "FROM ORDER_MEAL WHERE ORD_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -151,12 +150,11 @@ public class OrderDaoMySQL implements OrderDao {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				int MEMBER_ID = rs.getInt(1);
-				int TABLE_ID = rs.getInt(2);
-				Boolean TABLE_BELL = rs.getBoolean(3);
-				int ORD_TOTAL = rs.getInt(4);
-				Boolean ORD_STATUS = rs.getBoolean(5);
-				Boolean ORD_BILL = rs.getBoolean(6);
-				order = new Order(ord_id, MEMBER_ID, TABLE_ID, TABLE_BELL, ORD_TOTAL, ORD_STATUS, ORD_BILL);
+				int BK_ID = rs.getInt(2);
+				int ORD_TOTAL = rs.getInt(3);
+				Boolean ORD_STATUS = rs.getBoolean(4);
+				Boolean ORD_BILL = rs.getBoolean(5);
+				order = new Order(ord_id, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -177,7 +175,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public List<Order> getAll() {
-		String sql = "SELECT ORD_ID, MEMBER_ID, TABLE_ID, TABLE_BELL, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL;";
+		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> orderList = new ArrayList<Order>();
@@ -188,12 +186,11 @@ public class OrderDaoMySQL implements OrderDao {
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
 				int MEMBER_ID = rs.getInt(2);
-				int TABLE_ID = rs.getInt(3);
-				boolean TABLE_BELL = rs.getBoolean(4);
-				int ORD_TOTAL = rs.getInt(5);
-				boolean ORD_STATUS = rs.getBoolean(6);
-				boolean ORD_BILL = rs.getBoolean(7);
-				Order order = new Order(ORD_ID, MEMBER_ID, TABLE_ID, TABLE_BELL, ORD_TOTAL, ORD_STATUS, ORD_BILL);
+				int BK_ID = rs.getInt(3);
+				int ORD_TOTAL = rs.getInt(4);
+				boolean ORD_STATUS = rs.getBoolean(5);
+				boolean ORD_BILL = rs.getBoolean(6);
+				Order order = new Order(ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
 				orderList.add(order);
 			}
 			return orderList;
@@ -216,7 +213,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public List<Order> getAllByMemberId(int memberId) {
-		String sql = "SELECT ORD_ID, TABLE_ID, TABLE_BELL, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
+		String sql = "SELECT ORD_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> orders = new ArrayList<Order>();
@@ -227,12 +224,11 @@ public class OrderDaoMySQL implements OrderDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
-				int TABLE_ID = rs.getInt(2);
-				boolean TABLE_BELL = rs.getBoolean(3);
-				int ORD_TOTAL = rs.getInt(4);
-				boolean ORD_STATUS = rs.getBoolean(5);
-				boolean ORD_BILL = rs.getBoolean(6);
-				Order order = new Order(ORD_ID, TABLE_ID, TABLE_BELL, ORD_TOTAL, ORD_STATUS, ORD_BILL);
+				int BK_ID = rs.getInt(2);
+				int ORD_TOTAL = rs.getInt(3);
+				boolean ORD_STATUS = rs.getBoolean(4);
+				boolean ORD_BILL = rs.getBoolean(5);
+				Order order = new Order(ORD_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
 				orders.add(order);
 			}
 		} catch (SQLException e) {
