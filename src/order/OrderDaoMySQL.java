@@ -109,7 +109,7 @@ public class OrderDaoMySQL implements OrderDao {
 	public int update(Order order) {
 		int count = 0;
 		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, BK_ID = ?,"
-				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID";
+				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -281,4 +281,5 @@ public class OrderDaoMySQL implements OrderDao {
 		return bkId;
 		
 	}
+
 }

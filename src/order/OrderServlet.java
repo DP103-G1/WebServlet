@@ -14,6 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.mysql.cj.xdevapi.Table;
+
+import Booking_Web.Booking;
+import Booking_Web.BookingDao;
+import Booking_Web.BookingDaoMySQLImp;
+import Table_Web.TableDaoMySQLImp;
+import Table_Web.Table_Dao;
 
 @SuppressWarnings("serial")
 @WebServlet("/OrderServlet")
@@ -55,8 +62,13 @@ public class OrderServlet extends HttpServlet {
 			int count = 0;
 			if (action.equals("add")) {
 				int bkid = orderDao.getBkid(order.getMEMBER_ID());
+//				BookingDao bookingDao = new BookingDaoMySQLImp();
+//				Booking booking = bookingDao.getbkId(bkid);
 				order.setBK_ID(bkid);
+//				Table table = new Table(booking.getTableId(), 0, order.getORD_ID());
 				count = orderDao.add(order);
+//				Table_Dao table_Dao = new TableDaoMySQLImp();
+//				table_Dao.updateTableStatus(table);
 			} else if (action.equals("update")) {
 				count = orderDao.update(order);
 			}

@@ -15,4 +15,6 @@ public interface BookingDao {
 	List<Booking> getAll();
 	
 	List<Booking> getAllByMemberId(int memberId);
+	
+	
 }

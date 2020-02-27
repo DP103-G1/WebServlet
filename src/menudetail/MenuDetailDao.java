@@ -9,5 +9,7 @@ public interface MenuDetailDao {
 	int update(MenuDetail menuDetail);
 	
 	List<MenuDetail> getAllByMemberId(int memberId);
+	
+	List<MenuDetail> getAllByTableId(int tableId);
 
 }

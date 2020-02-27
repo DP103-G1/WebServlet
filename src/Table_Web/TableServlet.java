@@ -39,6 +39,9 @@ public class TableServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<Table> tables = tableDao.getAll();
 			writeText(response, gson.toJson(tables));
+		} else if (action.equals("getAllOrdId")) {
+			List<Table> tables = tableDao.getAllOrdId();
+			writeText(response, gson.toJson(tables));	
 		} else if (action.equals("tableInsert") || action.equals("tableUpdate")) {
 			String tableJson = jsonObject.get("table").getAsString();
 			System.out.println("tableJson = " + tableJson);

@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.websocket.Session;
+
 public class MenuDetailDaoMySQL implements MenuDetailDao {
 	
 	public MenuDetailDaoMySQL() {
@@ -148,6 +150,50 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 			}
 		}
 		return detas;
+	}
+
+	@Override
+	public List<MenuDetail> getAllByTableId(int tableId) {
+		String sql = "SELECT d.ORD_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, d.FOOD_STATUS  " + 
+				"FROM MENU_DETAIL d " + 
+				"join MENU m on d.MENU_ID = m.MENU_ID " + 
+				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " + 
+				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " + 
+				"WHERE TABLE_ID = ?; ";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<MenuDetail> detail = new ArrayList<MenuDetail>();
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, tableId);
+			ResultSet rs = ps.executeQuery();
+			System.out.println(rs);
+			while (rs.next()) {
+				int ORD_ID = rs.getInt(1);
+				String MENU_ID = rs.getString(2);
+				String FOOD_NAME = rs.getString(3);
+				int FOOD_AMOUNT = rs.getInt(4);
+				boolean FOOD_ARRIVAL = rs.getBoolean(5);
+				boolean FOOD_STATUS = rs.getBoolean(6);
+				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, FOOD_STATUS);
+				detail.add(menuDetail);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return detail;
 	}
 
 }
