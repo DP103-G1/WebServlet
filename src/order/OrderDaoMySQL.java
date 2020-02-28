@@ -109,7 +109,7 @@ public class OrderDaoMySQL implements OrderDao {
 	public int update(Order order) {
 		int count = 0;
 		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, BK_ID = ?,"
-				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID";
+				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -280,6 +280,7 @@ public class OrderDaoMySQL implements OrderDao {
 		}
 		return bkId;
 	}
+<<<<<<< HEAD
 	
 	@Override
 	public List<Order> getAllByOrdId(int ordId) {
@@ -322,4 +323,7 @@ public class OrderDaoMySQL implements OrderDao {
 	}
 
 	
+=======
+
+>>>>>>> c1b3a850f422fe978fadac82170b3d8e5638b3e1
 }

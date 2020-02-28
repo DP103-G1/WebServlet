@@ -18,7 +18,5 @@ public interface MenuDao {
 	
 	List<byte[]> getImageList();
 	
-	 
-
 	
 }
