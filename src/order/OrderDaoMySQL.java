@@ -280,7 +280,6 @@ public class OrderDaoMySQL implements OrderDao {
 		}
 		return bkId;
 	}
-<<<<<<< HEAD
 	
 	@Override
 	public List<Order> getAllByOrdId(int ordId) {
@@ -322,8 +321,4 @@ public class OrderDaoMySQL implements OrderDao {
 		return menuDetails;
 	}
 
-	
-=======
-
->>>>>>> c1b3a850f422fe978fadac82170b3d8e5638b3e1
 }

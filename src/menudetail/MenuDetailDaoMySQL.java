@@ -13,12 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-<<<<<<< HEAD
 import order.Order;
-=======
+
 import javax.websocket.Session;
->>>>>>> c1b3a850f422fe978fadac82170b3d8e5638b3e1
 
 public class MenuDetailDaoMySQL implements MenuDetailDao {
 	
