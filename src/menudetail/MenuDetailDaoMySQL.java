@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import order.Order;
+
 public class MenuDetailDaoMySQL implements MenuDetailDao {
 	
 	public MenuDetailDaoMySQL() {
@@ -149,5 +151,7 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 		}
 		return detas;
 	}
+	
+
 
 }

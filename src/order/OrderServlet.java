@@ -65,6 +65,12 @@ public class OrderServlet extends HttpServlet {
 			int id = jsonObject.get("ORD_ID").getAsInt();
 			Order order = orderDao.getId(id);
 			writeText(response, gson.toJson(order));
+			
+		}else if (action.equals("getAllByOrdId")) {
+			int ordId = jsonObject.get("ordId").getAsInt();
+			List<Order> orderMenuDetails = orderDao.getAllByOrdId(ordId);
+			
+			writeText(response, gson.toJson(orderMenuDetails));
 		} else {
 			writeText(response, "");
 		}

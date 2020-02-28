@@ -14,5 +14,8 @@ public interface OrderDao {
 		
 		List<Order> getAllByMemberId(int memberId);
 		
-		int getBkid(int memberId);		
-}
+		int getBkid(int memberId);	
+		
+		List<Order> getAllByOrdId(int ordId);
+		
+	}

@@ -279,6 +279,47 @@ public class OrderDaoMySQL implements OrderDao {
 			}
 		}
 		return bkId;
-		
 	}
+	
+	@Override
+	public List<Order> getAllByOrdId(int ordId) {
+		String sql = "SELECT d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL FROM EZeats.MENU_DETAIL d join EZeats.MENU m on d.MENU_ID = m.MENU_ID where ORD_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<Order> menuDetails = new ArrayList<Order>();
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, ordId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String menuId = rs.getString(1);
+				String foodName = rs.getString(2);
+				int foodAmount = rs.getInt(3);
+				boolean foodArrival = rs.getBoolean(4);
+				int total = rs.getInt(5);
+				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival,total);
+				menuDetails.add(menuDetail);
+			}
+			
+
+			return menuDetails;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return menuDetails;
+	}
+
+	
 }

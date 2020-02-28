@@ -46,6 +46,7 @@ public class MenuDetail {
 	}
 	
 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
