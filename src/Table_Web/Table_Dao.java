@@ -15,4 +15,7 @@ public interface Table_Dao {
 	public int deleteId(int tableId);
 	
 	public List<Table> getAllOrdId();
+	
+	public int updateTableStatus(Table table);
+	
 }

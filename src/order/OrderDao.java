@@ -2,6 +2,8 @@ package order;
 
 import java.util.List;
 
+import Table_Web.Table;
+
 public interface OrderDao {
 
 		List<Order> getAll();
@@ -17,6 +19,8 @@ public interface OrderDao {
 		int getBkid(int memberId);	
 		
 		List<Order> getAllByOrdId(int ordId);
+		
+		int updateTableStatus(Table t); 
 		
 	}
 

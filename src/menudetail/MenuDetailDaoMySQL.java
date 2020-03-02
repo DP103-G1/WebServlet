@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import order.Order;
 
-import javax.websocket.Session;
-
 public class MenuDetailDaoMySQL implements MenuDetailDao {
 	
 	public MenuDetailDaoMySQL() {
@@ -157,7 +155,7 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 
 	@Override
 	public List<MenuDetail> getAllByTableId(int tableId) {
-		String sql = "SELECT d.ORD_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, d.FOOD_STATUS  " + 
+		String sql = "SELECT d.ORD_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS  " + 
 				"FROM MENU_DETAIL d " + 
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " + 
@@ -178,8 +176,9 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 				String FOOD_NAME = rs.getString(3);
 				int FOOD_AMOUNT = rs.getInt(4);
 				boolean FOOD_ARRIVAL = rs.getBoolean(5);
-				boolean FOOD_STATUS = rs.getBoolean(6);
-				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, FOOD_STATUS);
+				int TOTAL = rs.getInt(6);
+				boolean FOOD_STATUS = rs.getBoolean(7);
+				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
 				detail.add(menuDetail);
 			}
 		} catch (SQLException e) {

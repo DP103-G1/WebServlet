@@ -19,7 +19,7 @@ public class Table {
 		super();
 		this.tableId = tableId;
 		this.tablePeople = tablePeople;
-		this.setORD_ID(ORD_ID);
+		this.ORD_ID = ORD_ID;
 	}
 	
 	@Override

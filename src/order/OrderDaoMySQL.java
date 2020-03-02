@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import Booking_Web.Booking;
+import Table_Web.Table;
 import menudetail.MenuDetail;
 
 public class OrderDaoMySQL implements OrderDao {
@@ -319,6 +320,36 @@ public class OrderDaoMySQL implements OrderDao {
 			}
 		}
 		return menuDetails;
+	}
+
+	@Override
+	public int updateTableStatus(Table t) {
+		int count = 0;
+		String sql = "";
+		sql = "UPDATE TABLE_DATA SET ORD_ID = ? WHERE TABLE_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL,USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, t.getORD_ID());
+			ps.setInt(2, t.getTableId());
+			count = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 }

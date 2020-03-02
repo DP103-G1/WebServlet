@@ -221,6 +221,36 @@ public class TableDaoMySQLImp implements Table_Dao {
 		return tableord;
 	}
 
+	@Override
+	public int updateTableStatus(Table table) {
+		int count = 0;
+		String sql = "";
+		sql = "UPDATE TABLE_DATA SET ORD_ID = ? WHERE TABLE_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL,USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, table.getORD_ID());
+			ps.setInt(2, table.getTableId());
+			count = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
 	
 
 }
