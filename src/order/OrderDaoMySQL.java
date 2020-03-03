@@ -299,7 +299,7 @@ public class OrderDaoMySQL implements OrderDao {
 				int foodAmount = rs.getInt(3);
 				boolean foodArrival = rs.getBoolean(4);
 				int total = rs.getInt(5);
-				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival,total);
+				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival, total);
 				menuDetails.add(menuDetail);
 			}
 			

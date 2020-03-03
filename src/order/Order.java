@@ -51,7 +51,7 @@ public class Order {
 	
 
 
-	public Order(String menuId, String foodName, int foodAmount, boolean foodArrival, int total ) {
+	public Order(String menuId, String foodName, int foodAmount, boolean foodArrival, int total) {
 
 		this.MENU_ID = menuId;
 		this.FOOD_NAME = foodName;

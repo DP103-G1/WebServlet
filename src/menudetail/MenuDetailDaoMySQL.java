@@ -63,12 +63,12 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 	
 	@Override
 	public List<MenuDetail> getAll() {
-//		String sql = "SELECT ORD_ID, MENU_ID, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS FROM MENU_DETAIL;";
 		String sql = "SELECT d.ORD_ID, d.MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
 				"FROM MENU_DETAIL d " + 
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
-				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID; ";
+				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " +
+				"WHERE FOOD_ARRIVAL = 0; ";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detaiList = new ArrayList<MenuDetail>();
@@ -113,7 +113,7 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
 				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " + 
-				"WHERE o.MEMBER_ID = ?;";
+				"WHERE o.MEMBER_ID = ? AND ORD_BILL = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detas = new ArrayList<MenuDetail>();
@@ -160,7 +160,7 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " + 
 				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " + 
-				"WHERE TABLE_ID = ?; ";
+				"WHERE TABLE_ID = ? AND FOOD_ARRIVAL = 0; ";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detail = new ArrayList<MenuDetail>();
