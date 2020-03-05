@@ -38,6 +38,13 @@ public class Order {
 		this.ORD_BILL = ORD_BILL;
 	}
 
+	public Order(int ORD_ID, int MEMBER_ID, int ORD_TOTAL, boolean ORD_BILL) {
+		this.ORD_ID = ORD_ID;
+		this.MEMBER_ID = MEMBER_ID;
+		this.ORD_TOTAL = ORD_TOTAL;
+		this.ORD_BILL = ORD_BILL;
+	}
+
 	public Order(int ORD_ID, int MEMBER_ID, int BK_ID, int ORD_TOTAL,
 			boolean ORD_STATUS, boolean ORD_BILL, List<MenuDetail> menuDetails) {
 		this.ORD_ID = ORD_ID;
@@ -51,13 +58,14 @@ public class Order {
 	
 
 
-	public Order(String menuId, String foodName, int foodAmount, boolean foodArrival, int total) {
+	public Order(String menuId, String foodName, int foodAmount, boolean foodArrival, int total, boolean ordbill) {
 
 		this.MENU_ID = menuId;
 		this.FOOD_NAME = foodName;
 		this.FOOD_AMOUNT = foodAmount;
 		this.FOOD_ARRIVAL = foodArrival;
 		this.TOTAL = total;
+		this.ORD_BILL = ordbill;
 	}
 	
 	public String getMENU_ID() {

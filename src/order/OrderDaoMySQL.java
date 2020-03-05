@@ -109,18 +109,17 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int update(Order order) {
 		int count = 0;
-		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, BK_ID = ?,"
-				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID = ?";
+		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, "
+				+ " ORD_TOTAL = ?, ORD_BILL = ? WHERE ORD_ID = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, order.getMEMBER_ID());
-			ps.setInt(2, order.getBK_ID());
-			ps.setInt(3, order.getORD_TOTAL());
-			ps.setBoolean(4, order.isORD_STATUS());
-			ps.setBoolean(5, order.isORD_BILL());
+			ps.setInt(2, order.getORD_TOTAL());
+			ps.setBoolean(3, order.isORD_BILL());
+			ps.setInt(4, order.getORD_ID());
 			count = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -284,7 +283,10 @@ public class OrderDaoMySQL implements OrderDao {
 	
 	@Override
 	public List<Order> getAllByOrdId(int ordId) {
-		String sql = "SELECT d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL FROM EZeats.MENU_DETAIL d join EZeats.MENU m on d.MENU_ID = m.MENU_ID where ORD_ID = ?;";
+		String sql = "SELECT d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, ORD_BILL FROM EZeats.ORDER_MEAL o "
+				+ "join EZeats.MENU_DETAIL d on o.ORD_ID = d.ORD_ID "
+				+ "join EZeats.MENU m on d.MENU_ID = m.MENU_ID "
+				+ "where o.ORD_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> menuDetails = new ArrayList<Order>();
@@ -299,7 +301,8 @@ public class OrderDaoMySQL implements OrderDao {
 				int foodAmount = rs.getInt(3);
 				boolean foodArrival = rs.getBoolean(4);
 				int total = rs.getInt(5);
-				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival, total);
+				boolean ordbill = rs.getBoolean(6);
+				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival, total, ordbill);
 				menuDetails.add(menuDetail);
 			}
 			
