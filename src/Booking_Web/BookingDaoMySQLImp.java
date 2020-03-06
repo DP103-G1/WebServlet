@@ -29,16 +29,13 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public int insert(Booking booking) {
-<<<<<<< HEAD
 		int count = 0 ;
 		String sql = 
 		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE,STATUS) VALUES(?,?, ?, ?, ?, ?, ?,?);";
 		Connection connection =null;
-=======
-		int count = 0;
-		String sql = "INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?,?, ?, ?, ?, ?, ?);";
-		Connection connection = null;
->>>>>>> 70994648ec3651f24a1d6c5757b953d0a1fbed18
+//		int count = 0;
+//		String sql = "INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?,?, ?, ?, ?, ?, ?);";
+//		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -110,10 +107,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 			ps.setInt(1, bkId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-<<<<<<< HEAD
-=======
-
->>>>>>> 70994648ec3651f24a1d6c5757b953d0a1fbed18
 				int memberId = rs.getInt(1);
 				int tableId = rs.getInt(2);
 				String bkTime = rs.getString(3);
@@ -121,12 +114,9 @@ public class BookingDaoMySQLImp implements BookingDao {
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-<<<<<<< HEAD
 				int bkStatus = rs.getInt(8);
 				booking = new Booking(memberId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkStatus);
-=======
-				booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
->>>>>>> 70994648ec3651f24a1d6c5757b953d0a1fbed18
+//				booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -206,12 +196,8 @@ public class BookingDaoMySQLImp implements BookingDao {
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-<<<<<<< HEAD
 				int bkStatus = rs.getInt(8);
 				Booking booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId,bkStatus);
-=======
-				Booking booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
->>>>>>> 70994648ec3651f24a1d6c5757b953d0a1fbed18
 				bookings.add(booking);
 			}
 		} catch (SQLException e) {
@@ -229,7 +215,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 			}
 		}
 		return bookings;
-<<<<<<< HEAD
 	}
 
 	@Override
@@ -260,9 +245,5 @@ public class BookingDaoMySQLImp implements BookingDao {
 		}
 		return count;
 	}
-=======
 
-	}
-
->>>>>>> 70994648ec3651f24a1d6c5757b953d0a1fbed18
 }
