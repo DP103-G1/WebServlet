@@ -29,7 +29,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public int insert(Booking booking) {
-
 		int count = 0 ;
 		String sql = 
 		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE,STATUS) VALUES(?,?, ?, ?, ?, ?, ?,?);";
@@ -114,6 +113,7 @@ public class BookingDaoMySQLImp implements BookingDao {
 				String bkPhone = rs.getString(7);
 				int bkStatus = rs.getInt(8);
 				booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkStatus);
+
 
 			}
 		} catch (SQLException e) {
@@ -213,7 +213,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 			}
 		}
 		return bookings;
-
 	}
 
 	@Override
@@ -245,8 +244,5 @@ public class BookingDaoMySQLImp implements BookingDao {
 		return count;
 	}
 
-
-	}
-
-
+}
 

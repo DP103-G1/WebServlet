@@ -18,10 +18,7 @@ import com.google.gson.JsonObject;
 import Booking_Web.Booking;
 import Booking_Web.BookingDao;
 import Booking_Web.BookingDaoMySQLImp;
-import Table_Web.Table;
-import Table_Web.TableDaoMySQLImp;
-import Table_Web.Table_Dao;
-import menudetail.MenuDetail;
+
 
 @SuppressWarnings("serial")
 @WebServlet("/OrderServlet")
@@ -46,9 +43,7 @@ public class OrderServlet extends HttpServlet {
 		if (orderDao == null) {
 			orderDao = new OrderDaoMySQL();
 		}
-
 		String action = jsonObject.get("action").getAsString();
-
 		if (action.equals("getAll")) {
 			List<Order> orders = orderDao.getAll();
 			writeText(response, gson.toJson(orders));
@@ -67,14 +62,8 @@ public class OrderServlet extends HttpServlet {
 				Booking booking = bookingDao.getbkId(bkid);
 				order.setBK_ID(bkid);
 				count = orderDao.add(order);
-//				int tableid = orderDao.gettableid(bkid);
-//				Table_Dao table_Dao = new TableDaoMySQLImp();
-//				Table table = new Table(tableid, order.getORD_ID());
-//				table_Dao.updateTableStatus(table);
 			} else if (action.equals("update")) {
 				count = orderDao.update(order);
-//				Table t = new Table(tableId, ORD_ID);
-//				orderDao.updateTableStatus(t);
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("getId")) {
@@ -85,7 +74,6 @@ public class OrderServlet extends HttpServlet {
 		} else if (action.equals("getAllByOrdId")) {
 			int ordId = jsonObject.get("ordId").getAsInt();
 			List<Order> orderMenuDetails = orderDao.getAllByOrdId(ordId);
-
 			writeText(response, gson.toJson(orderMenuDetails));
 		} else {
 			writeText(response, "");

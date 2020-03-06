@@ -10,12 +10,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import Booking_Web.Booking;
 import Table_Web.Table;
 import menudetail.MenuDetail;
 
@@ -37,8 +33,6 @@ public class OrderDaoMySQL implements OrderDao {
 		String sqlMenuDetail = "INSERT INTO `MENU_DETAIL`(ORD_ID, MENU_ID, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS) "
 				+ " VALUES (?, ?, ?, ?, ?, ?);";
 		String sqlGetOrderId = "SELECT LAST_INSERT_ID();";
-//		String columns[] = {"ORD_ID"};
-//		String sqlGetOrderId = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'EZeats' AND TABLE_NAME = 'ORDER_MEAL';";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		PreparedStatement psMenuDetail = null;
@@ -53,17 +47,17 @@ public class OrderDaoMySQL implements OrderDao {
 			ps.setBoolean(4, order.isORD_STATUS());
 			ps.setBoolean(5, order.isORD_BILL());
 			count = ps.executeUpdate();
-//			ResultSet res = ps.getGeneratedKeys();
-//			if (res.next()) {
-//				int orderId = res.getInt(1);
-//			}
 			if (count != 0) {
 				int orderId = 0;
 				psGetOrderId = connection.prepareStatement(sqlGetOrderId);
 				ResultSet rs = psGetOrderId.executeQuery();
+				int bkid = getBkid(order.getMEMBER_ID());
+				int tableid = gettableid(bkid);
 				if (rs.next()) {
 					orderId = rs.getInt(1);
 					System.out.println(orderId);
+					Table table = new Table(tableid, orderId);
+					count = updateTableStatus(table);
 					List<MenuDetail> menuDetails = order.getMenuDetails();
 					psMenuDetail = connection.prepareStatement(sqlMenuDetail);
 					for (MenuDetail menuDetail : menuDetails) {
@@ -78,10 +72,6 @@ public class OrderDaoMySQL implements OrderDao {
 							connection.rollback();
 							break;
 						}
-						int bkid = getBkid(order.getMEMBER_ID());
-						int tableid = gettableid(bkid);
-						Table table = new Table(tableid, orderId);
-						count = updateTableStatus(table);
 					}
 					connection.commit();
 				} else {
@@ -371,8 +361,7 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int updateTableStatus(Table table) {
 		int count = 0;
-		String sql = "";
-		sql = "UPDATE TABLE_DATA SET ORD_ID = ? WHERE TABLE_ID = ?;";
+		String sql = "UPDATE TABLE_DATA SET ORD_ID = ? WHERE TABLE_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
