@@ -53,7 +53,7 @@ public class MenuDetailServlet extends HttpServlet {
 			MenuDetail menuDetail = gson.fromJson(menudetailJson, MenuDetail.class);
 			int count = 0;
 			count = menuDetailDao.update(menuDetail);
-			writeText(response, gson.toJson(menuDetail));
+			writeText(response, gson.toJson(count));
 		} else if (action.equals("getAllByMemberId")) {
 			int memberId = jsonObject.get("memberId").getAsInt();
 			List<MenuDetail> menuDetails = menuDetailDao.getAllByMemberId(memberId);
@@ -64,7 +64,6 @@ public class MenuDetailServlet extends HttpServlet {
 //			Type listType = new TypeToken<List<MenuDetail>>() {}.getType();
 //			String jsonOut = gson.toJson(menuDetails, listType);
 			writeText(response, gson.toJson(menuDetails));
-		
 		} else {
 			writeText(response, "");
 		}
