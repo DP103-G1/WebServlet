@@ -30,7 +30,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 	public int insert(Booking booking) {
 		int count = 0 ;
 		String sql = 
-		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?,?, ?, ?, ?, ?, ?);";
+		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE,STATUS) VALUES(?,?, ?, ?, ?, ?, ?,?);";
 		Connection connection =null;
 		PreparedStatement ps = null;
 		try {
@@ -43,7 +43,8 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ps.setString(5, booking.getBkChild());
 			ps.setString(6, booking.getBkAdult());
 			ps.setString(7, booking.getBkPhone());
-			System.out.println(booking);
+			ps.setInt(8, booking.getStatus());
+			
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -61,8 +62,6 @@ public class BookingDaoMySQLImp implements BookingDao{
 		}
 		return count;
 	}
-
-
 
 	@Override
 	public int delete(int bkId) {
@@ -94,7 +93,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public Booking getbkId(int bkId) {
-		String sql = "SELECT MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE BK_ID = ?;";
+		String sql = "SELECT MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE,STATUS FROM BOOKING WHERE BK_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Booking booking = null;
@@ -104,7 +103,6 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ps.setInt(1, bkId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-	
 				int memberId = rs.getInt(1);
 				int tableId = rs.getInt(2);
 				String bkTime = rs.getString(3);
@@ -112,7 +110,8 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-				booking = new Booking(memberId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				int bkStatus = rs.getInt(8);
+				booking = new Booking(memberId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkStatus);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,7 +132,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public List<Booking> getAll() {
-		String sql = "SELECT BK_ID,MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM EZeats.BOOKING ;";
+		String sql = "SELECT BK_ID,MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE,STATUS FROM EZeats.BOOKING where status = 1 ;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Booking> bookingList = new ArrayList<Booking>();
@@ -150,7 +149,8 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(6);
 				String bkAdult = rs.getString(7);
 				String bkPhone = rs.getString(8);
-				Booking booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
+				int bkStatus = rs.getInt(9);
+				Booking booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId,bkStatus);
 				bookingList.add(booking);
 			}
 			
@@ -174,7 +174,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public List<Booking> getAllByMemberId(int memberId) {
-		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE MEMBER_ID = ?;";
+		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE,STATUS FROM BOOKING WHERE MEMBER_ID = ? and status = 1;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -191,7 +191,8 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-				Booking booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId);
+				int bkStatus = rs.getInt(8);
+				Booking booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId,bkStatus);
 				bookings.add(booking);
 			}
 		} catch (SQLException e) {
@@ -209,7 +210,34 @@ public class BookingDaoMySQLImp implements BookingDao{
 			}
 		}
 		return bookings;
-		
 	}
-	
+
+	@Override
+	public int update(int bk_id, int member_id) {
+		int count = 0;
+		String sql = "UPDATE BOOKING SET STATUS = 0 WHERE BK_ID = ? AND MEMBER_ID = ?; ";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, bk_id);
+			ps.setInt(2, member_id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
 }
