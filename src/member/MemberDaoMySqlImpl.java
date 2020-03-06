@@ -53,15 +53,14 @@ public class MemberDaoMySqlImpl implements MemberDao {
 	@Override
 	public int update(Member member) {
 		int count = 0;
-		String sql = "UPDATE `member` SET account = ?, password = ?, name = ?, "
+		String sql = "UPDATE `member` SET password = ?, name = ?, "
 				+ "phone = ? WHERE member_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setString(1, member.getAccount());
-			ps.setString(2, member.getpassword());
-			ps.setString(3, member.getname());
-			ps.setString(4, member.getphone());
-			ps.setInt(5, member.getmember_Id());
+			ps.setString(1, member.getpassword());
+			ps.setString(2, member.getname());
+			ps.setString(3, member.getphone());
+			ps.setInt(4, member.getmember_Id());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -71,7 +70,7 @@ public class MemberDaoMySqlImpl implements MemberDao {
 
 	@Override
 	public Member findByMemberId(int member_Id) {
-		String sql = "SELECT email, password, name, phone FROM `member` WHERE member_Id = ?;";
+		String sql = "SELECT account, password, name, phone FROM `member` WHERE member_Id = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Member memberData = null;
@@ -81,11 +80,11 @@ public class MemberDaoMySqlImpl implements MemberDao {
 			ps.setInt(1, member_Id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				String email = rs.getString(1);
+				String account = rs.getString(1);
 				String password = rs.getString(2);
 				String name = rs.getString(3);
 				String phone = rs.getString(4);
-				memberData = new Member(member_Id, email, password, name, phone);
+				memberData = new Member(member_Id, account, password, name, phone);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -157,4 +156,46 @@ public class MemberDaoMySqlImpl implements MemberDao {
 		}
 		return memId;
 	}
-}
+
+	@Override
+	public boolean forget(String account, String phone) {
+		boolean passwordForget = false;
+		String sql = "SELECT ACCOUNT,PHONE from EZeats.MEMBER WHERE ACCOUNT = ? and phone = ?;";
+		try (Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql)){
+			ps.setString(1, account);
+			ps.setString(2, phone);
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next() && rs.getString(1).equals(account) && rs.getString(2).equals(phone)) {
+				passwordForget = true;
+			}else {
+				passwordForget = false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return passwordForget;
+	}
+
+	@Override
+	public int updatePassword(Member account) {
+		int count = 0;
+		String sql = "update EZeats.MEMBER set password = ? where account = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setString(1,account.getpassword());
+			ps.setString(2, account.getAccount());
+			count = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	}
+	
+	
+

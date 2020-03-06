@@ -67,13 +67,14 @@ public class BookingDaoMySQLImp implements BookingDao{
 	@Override
 	public int delete(int bkId) {
 		int count = 0 ;
-		String sql = "DELETE FROM BOOKING WHERE BOOKING_ID = ?";
+		String sql = "DELETE FROM BOOKING WHERE BK_ID = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, bkId);
+			count = ps.executeUpdate();	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
