@@ -66,8 +66,9 @@ public class OrderServlet extends HttpServlet {
 				BookingDao bookingDao = new BookingDaoMySQLImp();
 				Booking booking = bookingDao.getbkId(bkid);
 				order.setBK_ID(bkid);
-				Table table = new Table(booking.getTableId(), "0", order.getORD_ID());
 				count = orderDao.add(order);
+				int tableid = orderDao.gettableid(bkid);
+				Table table = new Table(tableid, order.getORD_ID());
 				Table_Dao table_Dao = new TableDaoMySQLImp();
 				table_Dao.updateTableStatus(table);
 			} else if (action.equals("update")) {

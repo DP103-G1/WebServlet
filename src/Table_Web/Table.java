@@ -22,6 +22,12 @@ public class Table {
 		this.ORD_ID = ORD_ID;
 	}
 	
+	public Table(int tableId, int ORD_ID) {
+		super();
+		this.tableId = tableId;
+		this.ORD_ID = ORD_ID;
+	}
+	
 	@Override
 	public String toString() {
 		String text = "Table Id" + tableId + "\nTable People" + tablePeople ;

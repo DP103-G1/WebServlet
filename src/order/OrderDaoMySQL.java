@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,8 +32,7 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int add(Order order) {
 		int count = 0;
-		String sql = "INSERT INTO `ORDER_MEAL` "
-				+ "(MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL) "
+		String sql = "INSERT INTO `ORDER_MEAL` " + "(MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL) "
 				+ "VALUES(?, ?, ?, ?, ?);";
 		String sqlMenuDetail = "INSERT INTO `MENU_DETAIL`(ORD_ID, MENU_ID, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS) "
 				+ " VALUES (?, ?, ?, ?, ?, ?);";
@@ -45,13 +45,17 @@ public class OrderDaoMySQL implements OrderDao {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			connection.setAutoCommit(false);
-			ps = connection.prepareStatement(sql);
+			ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, order.getMEMBER_ID());
 			ps.setInt(2, order.getBK_ID());
 			ps.setInt(3, order.getORD_TOTAL());
 			ps.setBoolean(4, order.isORD_STATUS());
 			ps.setBoolean(5, order.isORD_BILL());
 			count = ps.executeUpdate();
+			ResultSet res = ps.getGeneratedKeys();
+			if (res.next()) {
+				int orderId = res.getInt(1);
+			}
 			if (count != 0) {
 				int orderId = 0;
 				psGetOrderId = connection.prepareStatement(sqlGetOrderId);
@@ -109,8 +113,7 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int update(Order order) {
 		int count = 0;
-		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, "
-				+ " ORD_TOTAL = ?, ORD_BILL = ? WHERE ORD_ID = ?";
+		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, " + " ORD_TOTAL = ?, ORD_BILL = ? WHERE ORD_ID = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -140,8 +143,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public Order getId(int ord_id) {
-		String sql = "SELECT MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL"
-				+ "FROM ORDER_MEAL WHERE ORD_ID = ?;";
+		String sql = "SELECT MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL" + "FROM ORDER_MEAL WHERE ORD_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Order order = null;
@@ -215,7 +217,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public List<Order> getAllByMemberId(int memberId) {
-		String sql = "SELECT ORD_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
+		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> orders = new ArrayList<Order>();
@@ -226,11 +228,12 @@ public class OrderDaoMySQL implements OrderDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
-				int BK_ID = rs.getInt(2);
-				int ORD_TOTAL = rs.getInt(3);
-				boolean ORD_STATUS = rs.getBoolean(4);
-				boolean ORD_BILL = rs.getBoolean(5);
-				Order order = new Order(ORD_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
+				int MEMBER_ID = rs.getInt(2);
+				int BK_ID = rs.getInt(3);
+				int ORD_TOTAL = rs.getInt(4);
+				boolean ORD_STATUS = rs.getBoolean(5);
+				boolean ORD_BILL = rs.getBoolean(6);
+				Order order = new Order(ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -257,16 +260,16 @@ public class OrderDaoMySQL implements OrderDao {
 		PreparedStatement ps = null;
 		int bkId = -1;
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1,memberId);
+			ps.setInt(1, memberId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				bkId = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -280,12 +283,42 @@ public class OrderDaoMySQL implements OrderDao {
 		}
 		return bkId;
 	}
-	
+
+	@Override
+	public int gettableid(int bkid) {
+		String sql = " select TABLE_ID from BOOKING where BK_ID = ? order by BK_DATE desc limit 1;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		int tableId = -1;
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, bkid);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				tableId = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return tableId;
+	}
+
 	@Override
 	public List<Order> getAllByOrdId(int ordId) {
 		String sql = "SELECT d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, ORD_BILL FROM EZeats.ORDER_MEAL o "
-				+ "join EZeats.MENU_DETAIL d on o.ORD_ID = d.ORD_ID "
-				+ "join EZeats.MENU m on d.MENU_ID = m.MENU_ID "
+				+ "join EZeats.MENU_DETAIL d on o.ORD_ID = d.ORD_ID " + "join EZeats.MENU m on d.MENU_ID = m.MENU_ID "
 				+ "where o.ORD_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -305,7 +338,6 @@ public class OrderDaoMySQL implements OrderDao {
 				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival, total, ordbill);
 				menuDetails.add(menuDetail);
 			}
-			
 
 			return menuDetails;
 		} catch (SQLException e) {
@@ -333,14 +365,14 @@ public class OrderDaoMySQL implements OrderDao {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
-			connection = DriverManager.getConnection(URL,USER, PASSWORD);
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, t.getORD_ID());
 			ps.setInt(2, t.getTableId());
 			count = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
