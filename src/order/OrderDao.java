@@ -18,6 +18,8 @@ public interface OrderDao {
 		
 		int getBkid(int memberId);	
 		
+		int gettableid(int bkid);
+		
 		List<Order> getAllByOrdId(int ordId);
 		
 		int updateTableStatus(Table t); 
