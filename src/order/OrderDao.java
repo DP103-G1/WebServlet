@@ -22,7 +22,9 @@ public interface OrderDao {
 		
 		List<Order> getAllByOrdId(int ordId);
 		
-		int updateTableStatus(Table t); 
+		int updateTableStatus(Table table); 
+		
+		int updateBillStatis(Table table);
 		
 	}
 

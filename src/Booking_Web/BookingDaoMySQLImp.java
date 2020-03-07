@@ -16,13 +16,14 @@ import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
 import static server_main.Common.URL;
 import static server_main.Common.PASSWORD;
-public class BookingDaoMySQLImp implements BookingDao{
-	
+
+public class BookingDaoMySQLImp implements BookingDao {
+
 	public BookingDaoMySQLImp() {
 		super();
 		try {
 			Class.forName(CLASS_NAME);
-			
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -32,11 +33,11 @@ public class BookingDaoMySQLImp implements BookingDao{
 	public int insert(Booking booking) {
 		int count = 0 ;
 		String sql = 
-		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE) VALUES(?,?, ?, ?, ?, ?, ?);";
+		"INSERT INTO BOOKING (MEMBER_ID,TABLE_ID,BK_TIME,BK_DATE,BK_CHILD,BK_ADULT,PHONE,STATUS) VALUES(?,?, ?, ?, ?, ?, ?,?);";
 		Connection connection =null;
 		PreparedStatement ps = null;
 		try {
-			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, booking.getMember().getmember_Id());
 			ps.setInt(2, booking.getTableId());
@@ -45,11 +46,12 @@ public class BookingDaoMySQLImp implements BookingDao{
 			ps.setString(5, booking.getBkChild());
 			ps.setString(6, booking.getBkAdult());
 			ps.setString(7, booking.getBkPhone());
-			System.out.println(booking);
+			ps.setInt(8, booking.getStatus());
+			
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -73,12 +75,11 @@ public class BookingDaoMySQLImp implements BookingDao{
 		PreparedStatement ps = null;
 		Booking booking = null;
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, bkId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-	
 				int memberId = rs.getInt(1);
 				int tableId = rs.getInt(2);
 				String bkTime = rs.getString(3);
@@ -97,7 +98,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -121,10 +122,10 @@ public class BookingDaoMySQLImp implements BookingDao{
 		PreparedStatement ps = null;
 		List<Booking> bookingList = new ArrayList<Booking>();
 		try {
-			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				int bkId = rs.getInt(1);
 				int memberId = rs.getInt(2);
 				int tableId = rs.getInt(3);
@@ -143,11 +144,11 @@ public class BookingDaoMySQLImp implements BookingDao{
 						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
 				bookingList.add(booking);
 			}
-			
-				return bookingList;
+
+			return bookingList;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -172,9 +173,9 @@ public class BookingDaoMySQLImp implements BookingDao{
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1,memberId);
+			ps.setInt(1, memberId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int bkId = rs.getInt(1);
@@ -196,7 +197,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -209,7 +210,36 @@ public class BookingDaoMySQLImp implements BookingDao{
 			}
 		}
 		return bookings;
-		
 	}
-	
+
+	@Override
+	public int update(int bk_id, int member_id) {
+		int count = 0;
+		String sql = "UPDATE BOOKING SET STATUS = 0 WHERE BK_ID = ? AND MEMBER_ID = ?; ";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL,USER,PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, bk_id);
+			ps.setInt(2, member_id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
 }
+

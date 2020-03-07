@@ -52,16 +52,15 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		List<Booking> bookings = bookingDao.getAllByMemberId(memberId);
 		writeText(response, gson.toJson(bookings));
 		
-	}else if(action.equals("bookingDelete")){
-		int bkId = jsonObject.get("bkId").getAsInt();
-		int count = bookingDao.delete(bkId);
-		writeText(response, String.valueOf(count));
-		
 	}else if(action.equals("getbkId")){
 		int bkId = jsonObject.get("bkId").getAsInt();
 		Booking booking = bookingDao.getbkId(bkId);
 		writeText(response, gson.toJson(booking));
-		
+	}else if(action.equals("update")){
+		int bkid = jsonObject.get("bk_id").getAsInt();
+		int member_id = jsonObject.get("member_id").getAsInt();
+		int count = bookingDao.update(bkid, member_id);
+		writeText(response, gson.toJson(count));
 	}else {
 		writeText(response, "");
 	}
