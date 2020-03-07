@@ -51,11 +51,6 @@ public class BookingServlet extends HttpServlet {
 			List<Booking> bookings = bookingDao.getAllByMemberId(memberId);
 			writeText(response, gson.toJson(bookings));
 
-		} else if (action.equals("bookingDelete")) {
-			int bkId = jsonObject.get("bkId").getAsInt();
-			int count = bookingDao.delete(bkId);
-			writeText(response, String.valueOf(count));
-
 		} else if (action.equals("getbkId")) {
 			int bkId = jsonObject.get("bkId").getAsInt();
 			Booking booking = bookingDao.getbkId(bkId);
@@ -68,6 +63,7 @@ public class BookingServlet extends HttpServlet {
 		} else {
 			writeText(response, "");
 		}
+
 	}
 
 	private void writeText(HttpServletResponse response, String json) throws IOException {
