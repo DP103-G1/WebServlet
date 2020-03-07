@@ -187,7 +187,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
 				int bkStatus = rs.getInt(8);
-				
 				String account = rs.getString(9);
 				String password = rs.getString(10);
 				String name = rs.getString(11);
