@@ -3,6 +3,11 @@ package order;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -65,7 +70,13 @@ public class OrderServlet extends HttpServlet {
 			int id = jsonObject.get("ORD_ID").getAsInt();
 			Order order = orderDao.getId(id);
 			writeText(response, gson.toJson(order));
-		} else {
+		}else if (action.equals("search")) {
+			long searchDate = jsonObject.get("calendar").getAsLong();
+			String type = jsonObject.get("type").getAsString();
+			List<Order>orders = orderDao.search(new Date(searchDate), type);
+			writeText(response, gson.toJson(orders));
+		}
+		else {
 			writeText(response, "");
 		}
 	}
@@ -82,8 +93,10 @@ public class OrderServlet extends HttpServlet {
 		if (orderDao == null) {
 			orderDao = new OrderDaoMySQL();
 		}
-		List<Order> order = orderDao.getAll();
-		writeText(response, new Gson().toJson(order));
+		Calendar calendar = new Calendar.Builder().setDate(2018, 3, 2).build();
+		List<Order> orders = orderDao.search(calendar.getTime(), "year");
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		writeText(response, gson.toJson(orders));
 	}
 
 }

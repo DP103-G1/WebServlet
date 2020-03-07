@@ -1,5 +1,6 @@
 package order;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import menudetail.MenuDetail;
@@ -12,6 +13,9 @@ public class Order {
 	private int ORD_TOTAL;
 	private boolean ORD_STATUS;
 	private boolean ORD_BILL;
+	private Timestamp ORD_TIME; {
+		
+	}
 	private List<MenuDetail> menuDetails; 
 	
 	public Order(int ORD_ID, int MEMBER_ID, int BK_ID,  int ORD_TOTAL,
@@ -42,6 +46,16 @@ public class Order {
 		this.ORD_STATUS = ORD_STATUS;
 		this.ORD_BILL = ORD_BILL;
 		this.menuDetails = menuDetails;
+	}
+	
+	public Order(int ORD_ID, int MEMBER_ID, int ORD_TOTAL,
+			boolean ORD_STATUS, boolean ORD_BILL, Timestamp ORD_TIME) {
+		this.ORD_ID = ORD_ID;
+		this.MEMBER_ID = MEMBER_ID;
+		this.ORD_TOTAL = ORD_TOTAL;
+		this.ORD_STATUS = ORD_STATUS;
+		this.ORD_BILL = ORD_BILL;
+		this.ORD_TIME = ORD_TIME;
 	}
 	
 	public int getORD_ID() {
@@ -98,6 +112,14 @@ public class Order {
 
 	public void setBK_ID(int bK_ID) {
 		BK_ID = bK_ID;
+	}
+
+	public Timestamp getORD_TIME() {
+		return ORD_TIME;
+	}
+
+	public void setORD_TIME(Timestamp ORD_TIME) {
+		ORD_TIME = ORD_TIME;
 	}
 
 

@@ -13,6 +13,4 @@ public interface Dao<T> {
 	public int update(String id,T t);
 	
 	public int deleteById(String id);
-	
-
 }

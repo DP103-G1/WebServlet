@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import box.Box;
+
 import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
 import static server_main.Common.URL;

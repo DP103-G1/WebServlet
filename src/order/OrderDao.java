@@ -1,6 +1,9 @@
 package order;
 
+import java.util.Date;
 import java.util.List;
+
+import Booking_Web.Booking;
 
 public interface OrderDao {
 
@@ -14,5 +17,7 @@ public interface OrderDao {
 		
 		List<Order> getAllByMemberId(int memberId);
 		
-		int getBkid(int memberId);		
+		int getBkid(int memberId);	
+		
+		List<Order> search(Date date, String type);
 }

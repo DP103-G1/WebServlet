@@ -10,11 +10,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import Booking_Web.Booking;
+import box.Box;
 import menudetail.MenuDetail;
 
 public class OrderDaoMySQL implements OrderDao {
@@ -281,4 +284,53 @@ public class OrderDaoMySQL implements OrderDao {
 		return bkId;
 		
 	}
+	@Override
+	public List<Order> search(Date date, String type) {
+		List<Order> orders = new ArrayList<Order>();
+		int getType = 0;
+		switch (type) {
+		case "day":
+			getType = Calendar.DAY_OF_MONTH;
+			break;
+		case "month":
+			getType = Calendar.MONTH;
+			break;
+		case "year":
+			getType = Calendar.YEAR;
+			break;
+		default:
+			return orders;
+		}
+		String sql = "SELECT ORD_TOTAL, ORD_TIME FROM EZeats.ORDER_MEAL "
+				+ "WHERE ORD_TIME >= ? and "
+				+ "ORD_TIME < ? order by ORD_TIME ;";
+		Connection conn = null;//連線
+		PreparedStatement ps = null;//連線，跳紅線按try catch
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = conn.prepareStatement(sql);//放sql語法
+			Calendar calendar = new Calendar.Builder().setInstant(date).build();
+			ps.setTimestamp(1, new Timestamp(calendar.getTimeInMillis()));
+			calendar.add(getType, 1);//sql選擇的欄位定義
+			ps.setTimestamp(2, new Timestamp(calendar.getTimeInMillis()));//sql選擇的欄位定義
+			ResultSet rs = ps.executeQuery();//resultSet在選擇行數上面,執行查詢語法;增刪改用列計算（int)
+			while (rs.next()) {//next()由最上面無限跑，至全部資料跑完
+				int ord_total = rs.getInt(1);
+				Timestamp ord_time = rs.getTimestamp(2);
+				Order order = new Order(0, 0, ord_total, false, false, ord_time);
+				orders.add(order);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+				ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return orders;
+	}
+	
 }
