@@ -10,11 +10,12 @@ public interface BookingDao {
 	
 	int insert(Booking booking);
 	
-	int delete(int bkId);
-	
 	Booking getbkId(int bkId);
 	
 	List<Booking> getAll();
 	
 	List<Booking> getAllByMemberId(int memberId);
+	
+	int update(int bk_id, int member_id);
+	
 }

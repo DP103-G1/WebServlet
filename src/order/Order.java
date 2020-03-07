@@ -8,14 +8,17 @@ import menudetail.MenuDetail;
 public class Order {
 
 	private int ORD_ID;
+	private String MENU_ID;
+	private String FOOD_NAME;
+	private int FOOD_AMOUNT;
+	private boolean FOOD_ARRIVAL;
+	private int TOTAL;
 	private int MEMBER_ID;
 	private int BK_ID;
 	private int ORD_TOTAL;
 	private boolean ORD_STATUS;
 	private boolean ORD_BILL;
-	private Timestamp ORD_TIME; {
-		
-	}
+	private Timestamp ORD_TIME; 
 	private List<MenuDetail> menuDetails; 
 	
 	public Order(int ORD_ID, int MEMBER_ID, int BK_ID,  int ORD_TOTAL,
@@ -37,6 +40,13 @@ public class Order {
 		this.ORD_BILL = ORD_BILL;
 	}
 
+	public Order(int ORD_ID, int MEMBER_ID, int ORD_TOTAL, boolean ORD_BILL) {
+		this.ORD_ID = ORD_ID;
+		this.MEMBER_ID = MEMBER_ID;
+		this.ORD_TOTAL = ORD_TOTAL;
+		this.ORD_BILL = ORD_BILL;
+	}
+
 	public Order(int ORD_ID, int MEMBER_ID, int BK_ID, int ORD_TOTAL,
 			boolean ORD_STATUS, boolean ORD_BILL, List<MenuDetail> menuDetails) {
 		this.ORD_ID = ORD_ID;
@@ -48,6 +58,7 @@ public class Order {
 		this.menuDetails = menuDetails;
 	}
 	
+
 	public Order(int ORD_ID, int MEMBER_ID, int ORD_TOTAL,
 			boolean ORD_STATUS, boolean ORD_BILL, Timestamp ORD_TIME) {
 		this.ORD_ID = ORD_ID;
@@ -58,6 +69,59 @@ public class Order {
 		this.ORD_TIME = ORD_TIME;
 	}
 	
+
+
+
+	public Order(String menuId, String foodName, int foodAmount, boolean foodArrival, int total, boolean ordbill) {
+
+		this.MENU_ID = menuId;
+		this.FOOD_NAME = foodName;
+		this.FOOD_AMOUNT = foodAmount;
+		this.FOOD_ARRIVAL = foodArrival;
+		this.TOTAL = total;
+		this.ORD_BILL = ordbill;
+	}
+	
+	public String getMENU_ID() {
+		return MENU_ID;
+	}
+	
+	public void setMENU_ID(String mENU_ID) {
+		MENU_ID = mENU_ID;
+	}
+
+	public String getFOOD_NAME() {
+		return FOOD_NAME;
+	}
+
+	public void setFOOD_NAME(String fOOD_NAME) {
+		FOOD_NAME = fOOD_NAME;
+	}
+
+	public int getFOOD_AMOUNT() {
+		return FOOD_AMOUNT;
+	}
+
+	public void setFOOD_AMOUNT(int fOOD_AMOUNT) {
+		FOOD_AMOUNT = fOOD_AMOUNT;
+	}
+
+	public boolean isFOOD_ARRIVAL() {
+		return FOOD_ARRIVAL;
+	}
+
+	public void setFOOD_ARRIVAL(boolean fOOD_ARRIVAL) {
+		FOOD_ARRIVAL = fOOD_ARRIVAL;
+	}
+
+	public int getTOTAL() {
+		return TOTAL;
+	}
+
+	public void setTOTAL(int tOTAL) {
+		TOTAL = tOTAL;
+	}
+
 	public int getORD_ID() {
 		return ORD_ID;
 	}
@@ -113,6 +177,7 @@ public class Order {
 	public void setBK_ID(int bK_ID) {
 		BK_ID = bK_ID;
 	}
+	
 
 	public Timestamp getORD_TIME() {
 		return ORD_TIME;

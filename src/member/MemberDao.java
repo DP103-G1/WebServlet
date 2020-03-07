@@ -12,4 +12,11 @@ public interface MemberDao {
 	List<Member> getAll();
 
 	String login(String account, String password);
+	
+	boolean forget(String account,String phone);
+	
+	int updatePassword(Member account);
+	
+	int updateState(Member member);
 }
+

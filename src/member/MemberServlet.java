@@ -66,7 +66,22 @@ public class MemberServlet extends HttpServlet {
 			String account = jsonObject.get("account").getAsString();
 			String password = jsonObject.get("password").getAsString();
 			writeText(response, memberDataDao.login(account, password));
-		} else {
+		} else if(action.equals("forget")){
+			String account = jsonObject.get("account").getAsString();
+			String phone = jsonObject.get("phone").getAsString();
+			boolean conut = memberDataDao.forget(account, phone);
+			writeText(response, String.valueOf(conut));
+		}else if(action.equals("updatePassword")){
+			String accountJson = jsonObject.get("account").getAsString();
+			Member account = gson.fromJson(accountJson, Member.class);
+			int count = memberDataDao.updatePassword(account);
+			writeText(response, String.valueOf(count));
+		}else if (action.equals("updateState")) {
+			String memberJson = jsonObject.get("member").getAsString();
+			Member member = gson.fromJson(memberJson, Member.class);
+			int count = memberDataDao.updateState(member);
+			writeText(response, String.valueOf(count));
+		}else {
 			writeText(response, "");
 		}
 	}

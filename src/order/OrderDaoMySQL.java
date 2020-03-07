@@ -18,6 +18,8 @@ import java.util.List;
 
 import Booking_Web.Booking;
 import box.Box;
+import java.util.List;
+import Table_Web.Table;
 import menudetail.MenuDetail;
 
 public class OrderDaoMySQL implements OrderDao {
@@ -33,13 +35,11 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int add(Order order) {
 		int count = 0;
-		String sql = "INSERT INTO `ORDER_MEAL` "
-				+ "(MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL) "
+		String sql = "INSERT INTO `ORDER_MEAL` " + "(MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL) "
 				+ "VALUES(?, ?, ?, ?, ?);";
 		String sqlMenuDetail = "INSERT INTO `MENU_DETAIL`(ORD_ID, MENU_ID, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS) "
 				+ " VALUES (?, ?, ?, ?, ?, ?);";
 		String sqlGetOrderId = "SELECT LAST_INSERT_ID();";
-//		String sqlGetOrderId = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'EZeats' AND TABLE_NAME = 'ORDER_MEAL';";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		PreparedStatement psMenuDetail = null;
@@ -58,9 +58,13 @@ public class OrderDaoMySQL implements OrderDao {
 				int orderId = 0;
 				psGetOrderId = connection.prepareStatement(sqlGetOrderId);
 				ResultSet rs = psGetOrderId.executeQuery();
+				int bkid = getBkid(order.getMEMBER_ID());
+				int tableid = gettableid(bkid);
 				if (rs.next()) {
 					orderId = rs.getInt(1);
 					System.out.println(orderId);
+					Table table = new Table(tableid, orderId);
+					count = updateTableStatus(table);
 					List<MenuDetail> menuDetails = order.getMenuDetails();
 					psMenuDetail = connection.prepareStatement(sqlMenuDetail);
 					for (MenuDetail menuDetail : menuDetails) {
@@ -89,7 +93,7 @@ public class OrderDaoMySQL implements OrderDao {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
@@ -111,19 +115,23 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int update(Order order) {
 		int count = 0;
-		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, BK_ID = ?,"
-				+ " ORD_TOTAL = ?, ORD_STATUS = ?, ORD_BILL = ?" + "WHERE ORD_ID";
+		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, ORD_TOTAL = ?, ORD_BILL = ? WHERE ORD_ID = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, order.getMEMBER_ID());
-			ps.setInt(2, order.getBK_ID());
-			ps.setInt(3, order.getORD_TOTAL());
-			ps.setBoolean(4, order.isORD_STATUS());
-			ps.setBoolean(5, order.isORD_BILL());
+			ps.setInt(2, order.getORD_TOTAL());
+			ps.setBoolean(3, order.isORD_BILL());
+			ps.setInt(4, order.getORD_ID());
 			count = ps.executeUpdate();
+			if (count != 0) {
+				int bkid = getBkid(order.getMEMBER_ID());
+				int tableid = gettableid(bkid);
+				Table table = new Table(tableid, null);
+				count = updateBillStatis(table);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -143,8 +151,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public Order getId(int ord_id) {
-		String sql = "SELECT MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL"
-				+ "FROM ORDER_MEAL WHERE ORD_ID = ?;";
+		String sql = "SELECT MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL" + "FROM ORDER_MEAL WHERE ORD_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Order order = null;
@@ -218,7 +225,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public List<Order> getAllByMemberId(int memberId) {
-		String sql = "SELECT ORD_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
+		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> orders = new ArrayList<Order>();
@@ -229,11 +236,12 @@ public class OrderDaoMySQL implements OrderDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int ORD_ID = rs.getInt(1);
-				int BK_ID = rs.getInt(2);
-				int ORD_TOTAL = rs.getInt(3);
-				boolean ORD_STATUS = rs.getBoolean(4);
-				boolean ORD_BILL = rs.getBoolean(5);
-				Order order = new Order(ORD_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
+				int MEMBER_ID = rs.getInt(2);
+				int BK_ID = rs.getInt(3);
+				int ORD_TOTAL = rs.getInt(4);
+				boolean ORD_STATUS = rs.getBoolean(5);
+				boolean ORD_BILL = rs.getBoolean(6);
+				Order order = new Order(ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL);
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -260,16 +268,16 @@ public class OrderDaoMySQL implements OrderDao {
 		PreparedStatement ps = null;
 		int bkId = -1;
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1,memberId);
+			ps.setInt(1, memberId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				bkId = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -282,8 +290,8 @@ public class OrderDaoMySQL implements OrderDao {
 			}
 		}
 		return bkId;
-		
 	}
+
 	@Override
 	public List<Order> search(Date date, String type) {
 		List<Order> orders = new ArrayList<Order>();
@@ -324,13 +332,146 @@ public class OrderDaoMySQL implements OrderDao {
 			e.printStackTrace();
 		} finally {
 			try {
-				conn.close();
-				ps.close();
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return orders;
 	}
+
+	@Override
+	public int gettableid(int bkid) {
+		String sql = " select TABLE_ID from BOOKING where BK_ID = ? order by BK_DATE desc limit 1;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		int tableId = -1;
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, bkid);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				tableId = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return tableId;
+	}
+
+	@Override
+	public List<Order> getAllByOrdId(int ordId) {
+		String sql = "SELECT d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, ORD_BILL FROM EZeats.ORDER_MEAL o "
+				+ "join EZeats.MENU_DETAIL d on o.ORD_ID = d.ORD_ID " + "join EZeats.MENU m on d.MENU_ID = m.MENU_ID "
+				+ "where o.ORD_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<Order> menuDetails = new ArrayList<Order>();
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, ordId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String menuId = rs.getString(1);
+				String foodName = rs.getString(2);
+				int foodAmount = rs.getInt(3);
+				boolean foodArrival = rs.getBoolean(4);
+				int total = rs.getInt(5);
+				boolean ordbill = rs.getBoolean(6);
+				Order menuDetail = new Order(menuId, foodName, foodAmount, foodArrival, total, ordbill);
+				menuDetails.add(menuDetail);
+			}
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return menuDetails;
+	}
 	
+	@Override
+	public int updateTableStatus(Table table) {
+		int count = 0;
+		String sql = "UPDATE TABLE_DATA SET ORD_ID = ? WHERE TABLE_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL,USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, table.getORD_ID());
+			ps.setInt(2, table.getTableId());
+			count = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
+	@Override
+	public int updateBillStatis(Table table) {
+		int count = 0;
+		String sql = "";
+		sql = "UPDATE TABLE_DATA SET ORD_ID = ? WHERE TABLE_ID = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, table.getORD_ID());
+			ps.setInt(2, table.getTableId());
+			count = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
 }

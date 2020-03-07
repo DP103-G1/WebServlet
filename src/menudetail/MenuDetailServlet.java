@@ -3,6 +3,7 @@ package menudetail;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 @SuppressWarnings("serial")
 @WebServlet("/MenuDetailServlet")
@@ -51,12 +53,17 @@ public class MenuDetailServlet extends HttpServlet {
 			MenuDetail menuDetail = gson.fromJson(menudetailJson, MenuDetail.class);
 			int count = 0;
 			count = menuDetailDao.update(menuDetail);
-			writeText(response, gson.toJson(menuDetail));
+			writeText(response, gson.toJson(count));
 		} else if (action.equals("getAllByMemberId")) {
 			int memberId = jsonObject.get("memberId").getAsInt();
 			List<MenuDetail> menuDetails = menuDetailDao.getAllByMemberId(memberId);
 			writeText(response, gson.toJson(menuDetails));
-		
+		} else if (action.equals("getAllByTableId")) {
+			int tableId = jsonObject.get("tableId").getAsInt();
+			List<MenuDetail> menuDetails = menuDetailDao.getAllByTableId(tableId);
+//			Type listType = new TypeToken<List<MenuDetail>>() {}.getType();
+//			String jsonOut = gson.toJson(menuDetails, listType);
+			writeText(response, gson.toJson(menuDetails));
 		} else {
 			writeText(response, "");
 		}
