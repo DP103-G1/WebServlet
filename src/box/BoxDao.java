@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
@@ -131,7 +132,7 @@ public class BoxDao implements Dao<Box>{
 		String sql ="SELECT SUG_ID,MEMBER_ID,TOPIC,PURPOSE,IFO_SOURCE,DATE,SATISFIED,FEED_BACK,REPLY;";
 		Connection conn = null;
 		PreparedStatement ps =null;
-		Box box =null;
+		Box box = null;
 		try {
 			conn = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = conn.prepareStatement(sql);
@@ -173,7 +174,7 @@ public class BoxDao implements Dao<Box>{
 		PreparedStatement ps = null;
 		List<Box> boxList = new ArrayList<Box>();
 		try {
-			connection =DriverManager.getConnection(URL,USER,PASSWORD);
+			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -206,6 +207,5 @@ public class BoxDao implements Dao<Box>{
 		}
 		return boxList;
 	}
-
 }
 
