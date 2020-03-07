@@ -12,6 +12,6 @@ public interface MenuDetailDao {
 	
 	List<MenuDetail> getAllByMemberId(int memberId);
 	
-	List<MenuDetail> getAllByTableId(int tableId);
+	List<MenuDetail> getAllByBkId(int bkId);
 
 }
