@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import member.Member;
+
 import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
 import static server_main.Common.URL;
@@ -36,7 +38,7 @@ public class BookingDaoMySQLImp implements BookingDao{
 		try {
 			connection = DriverManager.getConnection(URL,USER,PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, booking.getMemberId());
+			ps.setInt(1, booking.getMember().getmember_Id());
 			ps.setInt(2, booking.getTableId());
 			ps.setString(3, booking.getBkTime());
 			ps.setTimestamp(4, new Timestamp(booking.getBkDate().getTime()));
@@ -62,39 +64,11 @@ public class BookingDaoMySQLImp implements BookingDao{
 		return count;
 	}
 
-
-
-	@Override
-	public int delete(int bkId) {
-		int count = 0 ;
-		String sql = "DELETE FROM BOOKING WHERE BK_ID = ?";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(URL,USER,PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, bkId);
-			count = ps.executeUpdate();	
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return count;
-	}
-
 	@Override
 	public Booking getbkId(int bkId) {
-		String sql = "SELECT MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE BK_ID = ?;";
+		String sql = "SELECT `BOOKING`.MEMBER_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, "
+				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
+				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID WHERE BK_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Booking booking = null;
@@ -112,7 +86,14 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-				booking = new Booking(memberId,tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
+				
+				String account = rs.getString(8);
+				String password = rs.getString(9);
+				String name = rs.getString(10);
+				String phone = rs.getString(11);
+				int state = rs.getInt(12);
+				booking = new Booking(new Member(memberId, account, password, name, phone, state), 
+						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,7 +114,9 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public List<Booking> getAll() {
-		String sql = "SELECT BK_ID,MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM EZeats.BOOKING ;";
+		String sql = "SELECT BK_ID, `BOOKING`.MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, "
+				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
+				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Booking> bookingList = new ArrayList<Booking>();
@@ -150,7 +133,14 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(6);
 				String bkAdult = rs.getString(7);
 				String bkPhone = rs.getString(8);
-				Booking booking = new Booking(memberId, tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
+				
+				String account = rs.getString(9);
+				String password = rs.getString(10);
+				String name = rs.getString(11);
+				String phone = rs.getString(12);
+				int state = rs.getInt(13);
+				Booking booking = new Booking(new Member(memberId, account, password, name, phone, state), 
+						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone, bkId);
 				bookingList.add(booking);
 			}
 			
@@ -174,7 +164,10 @@ public class BookingDaoMySQLImp implements BookingDao{
 
 	@Override
 	public List<Booking> getAllByMemberId(int memberId) {
-		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, PHONE FROM BOOKING WHERE MEMBER_ID = ?;";
+		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, "
+				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
+				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID "
+				+ "WHERE `BOOKING`.MEMBER_ID = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -191,7 +184,14 @@ public class BookingDaoMySQLImp implements BookingDao{
 				String bkChild = rs.getString(5);
 				String bkAdult = rs.getString(6);
 				String bkPhone = rs.getString(7);
-				Booking booking = new Booking(tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId);
+				
+				String account = rs.getString(8);
+				String password = rs.getString(9);
+				String name = rs.getString(10);
+				String phone = rs.getString(11);
+				int state = rs.getInt(12);
+				Booking booking = new Booking(new Member(memberId, account, password, name, phone, state), 
+						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId);
 				bookings.add(booking);
 			}
 		} catch (SQLException e) {

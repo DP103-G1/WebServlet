@@ -8,8 +8,6 @@ public interface BookingDao {
 	
 	int insert(Booking booking);
 	
-	int delete(int bkId);
-	
 	Booking getbkId(int bkId);
 	
 	List<Booking> getAll();

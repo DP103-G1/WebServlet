@@ -2,9 +2,11 @@ package Booking_Web;
 
 import java.util.Date;
 
+import member.Member;
+
 public class Booking {
 	
-	private int memberId;
+	private Member member;
 	private int tableId;
 	private String bkTime;
 	private Date bkDate;
@@ -13,12 +15,12 @@ public class Booking {
 	private String bkPhone;
 	private int bkId;
 	
-public Booking(int memberId, int tableId, 
+public Booking(Member member, int tableId, 
 		String bkTime, Date bkDate, String bkChild, String bkAdult,
 		String bkPhone) {
 	
 	super();
-	this.memberId = memberId;
+	this.member = member;
 	this.tableId = tableId;
 	this.bkTime = bkTime;
 	this.bkDate = bkDate;
@@ -32,10 +34,10 @@ public Booking(int memberId, int tableId,
 
 
 
-public Booking(int memberId, int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult, String bkPhone,
+public Booking(Member member, int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult, String bkPhone,
 		int bkId) {
 	super();
-	this.memberId = memberId;
+	this.member = member;
 	this.tableId = tableId;
 	this.bkTime = bkTime;
 	this.bkDate = bkDate;
@@ -69,7 +71,7 @@ public Booking( int tableId, String bkTime, Date bkDate, String bkChild, String 
 
 @Override
 public String toString() {
-	return "Booking [bkId=" + bkId + ", memberId=" + memberId + ", tableId=" + tableId + ", bkTime=" + bkTime
+	return "Booking [bkId=" + bkId + ", member=" + member + ", tableId=" + tableId + ", bkTime=" + bkTime
 			+ ", bkDate=" + bkDate + ", bkChild=" + bkChild + ", bkAdult=" + bkAdult + ", bkPhone=" + bkPhone + "]";
 }
 
@@ -83,12 +85,12 @@ public void setBkId(int bkId) {
 	this.bkId = bkId;
 }
 
-public int getMemberId() {
-	return memberId;
+public Member getMember() {
+	return member;
 }
 
-public void setMemberId(int memberId) {
-	this.memberId = memberId;
+public void setMemberId(Member member) {
+	this.member = member;
 }
 
 public int getTableId() {
