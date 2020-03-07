@@ -76,6 +76,11 @@ public class MemberServlet extends HttpServlet {
 			Member account = gson.fromJson(accountJson, Member.class);
 			int count = memberDataDao.updatePassword(account);
 			writeText(response, String.valueOf(count));
+		}else if (action.equals("updateState")) {
+			String memberJson = jsonObject.get("member").getAsString();
+			Member member = gson.fromJson(memberJson, Member.class);
+			int count = memberDataDao.updateState(member);
+			writeText(response, String.valueOf(count));
 		}else {
 			writeText(response, "");
 		}

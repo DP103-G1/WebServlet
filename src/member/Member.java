@@ -21,7 +21,11 @@ public class Member {
 	public Member(String account, String password) {
 		this.account = account;
 		this.password = password;
-
+	}
+	
+	public Member(int member_Id, int state) {
+		this.member_Id = member_Id;
+		this.state = state;
 	}
 	
 	public Member(String account, String password, String name, String phone) {
