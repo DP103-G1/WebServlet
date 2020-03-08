@@ -68,7 +68,7 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
 				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " +
-				"WHERE FOOD_ARRIVAL = 0; ";
+				"WHERE d.FOOD_STATUS = 0; ";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detaiList = new ArrayList<MenuDetail>();
@@ -156,20 +156,19 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 
 
 	@Override
-	public List<MenuDetail> getAllByTableId(int tableId) {
-		String sql = "SELECT d.ORD_ID, d.MENU_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS  " + 
-				"FROM MENU_DETAIL d " + 
-				"join MENU m on d.MENU_ID = m.MENU_ID " + 
-				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " + 
-				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " + 
-				"WHERE TABLE_ID = ? AND FOOD_ARRIVAL = 0; ";
+	public List<MenuDetail> getAllByBkId(int bkId) {
+		String sql = "SELECT `MENU_DETAIL`.ORD_ID, `MENU_DETAIL`.MENU_ID, FOOD_NAME, FOOD_AMOUNT, "
+				+ "FOOD_ARRIVAL, TOTAL, `MENU_DETAIL`.FOOD_STATUS FROM `ORDER_MEAL` "
+				+ "JOIN `MENU_DETAIL` ON `ORDER_MEAL`.ORD_ID = `MENU_DETAIL`.ORD_ID "
+				+ "JOIN `MENU` ON `MENU`.MENU_ID = `MENU_DETAIL`.MENU_ID "
+				+ "WHERE BK_ID = ? AND ORD_BILL = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detail = new ArrayList<MenuDetail>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, tableId);
+			ps.setInt(1, bkId);
 			ResultSet rs = ps.executeQuery();
 			System.out.println(rs);
 			while (rs.next()) {

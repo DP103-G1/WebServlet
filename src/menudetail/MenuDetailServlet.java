@@ -58,9 +58,9 @@ public class MenuDetailServlet extends HttpServlet {
 			int memberId = jsonObject.get("memberId").getAsInt();
 			List<MenuDetail> menuDetails = menuDetailDao.getAllByMemberId(memberId);
 			writeText(response, gson.toJson(menuDetails));
-		} else if (action.equals("getAllByTableId")) {
-			int tableId = jsonObject.get("tableId").getAsInt();
-			List<MenuDetail> menuDetails = menuDetailDao.getAllByTableId(tableId);
+		} else if (action.equals("getAllByBkId")) {
+			int bkId = jsonObject.get("bkId").getAsInt();
+			List<MenuDetail> menuDetails = menuDetailDao.getAllByBkId(bkId);
 //			Type listType = new TypeToken<List<MenuDetail>>() {}.getType();
 //			String jsonOut = gson.toJson(menuDetails, listType);
 			writeText(response, gson.toJson(menuDetails));

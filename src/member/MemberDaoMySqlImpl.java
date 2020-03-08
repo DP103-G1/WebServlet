@@ -198,6 +198,22 @@ public class MemberDaoMySqlImpl implements MemberDao {
 		return count;
 	}
 
+	@Override
+	public int updateState(Member member) {
+		int count = 0;
+		String sql = "update EZeats.MEMBER set state = ? where member_id = ?;";
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, member.getState());
+			ps.setInt(2, member.getmember_Id());
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			return count;
+	}
+
 	}
 	
 	

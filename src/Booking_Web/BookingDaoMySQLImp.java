@@ -10,6 +10,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import member.Member;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> fd315e62012028d8588fe8d0bd09558d7e5d7864
 import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
 import static server_main.Common.URL;
@@ -111,7 +116,11 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public List<Booking> getAll() {
+<<<<<<< HEAD
 		String sql = "SELECT BK_ID, `BOOKING`.MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS , "
+=======
+		String sql = "SELECT BK_ID, `BOOKING`.MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
+>>>>>>> fd315e62012028d8588fe8d0bd09558d7e5d7864
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID WHERE STATUS = 1;";
 		Connection connection = null;
