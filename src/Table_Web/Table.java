@@ -6,6 +6,7 @@ public class Table {
 	private int tableId;
 	private String tablePeople;
 	private int ORD_ID;
+	private boolean status;
 	
 	
 	
@@ -15,13 +16,14 @@ public class Table {
 		this.tablePeople = tablePeople;
 	}
 	
-	public Table(int tableId, String tablePeople, int ORD_ID) {
+	public Table(int tableId, String tablePeople, int ORD_ID, boolean status) {
 		super();
 		this.tableId = tableId;
 		this.tablePeople = tablePeople;
 		this.ORD_ID = ORD_ID;
+		this.status = status;
 	}
-	
+
 	public Table(int tableId, int ORD_ID) {
 		super();
 		this.tableId = tableId;
@@ -67,6 +69,12 @@ public class Table {
 	public void setORD_ID(int ord_id) {
 		ORD_ID = ord_id;
 	}
-
 	
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 }

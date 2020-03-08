@@ -57,9 +57,9 @@ public class BookingServlet extends HttpServlet {
 			Booking booking = bookingDao.getbkId(bkId);
 			writeText(response, gson.toJson(booking));
 		} else if (action.equals("update")) {
-			int bkid = jsonObject.get("bk_id").getAsInt();
-			int member_id = jsonObject.get("member_id").getAsInt();
-			int count = bookingDao.update(bkid, member_id);
+			String bookingJson = jsonObject.get("booking").getAsString();
+			Booking booking = gson.fromJson(bookingJson, Booking.class);
+			int count = bookingDao.update(booking);
 			writeText(response, gson.toJson(count));
 		} else {
 			writeText(response, "");

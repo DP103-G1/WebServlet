@@ -18,6 +18,8 @@ import org.apache.tomcat.jni.OS;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.xdevapi.Result;
 
+import Booking_Web.BookingDaoMySQLImp;
+
 public class TableDaoMySQLImp implements Table_Dao {
 
 	public TableDaoMySQLImp() {
@@ -187,7 +189,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 
 	@Override
 	public List<Table> getAllOrdId() {
-		String sql = "SELECT TABLE_ID ,TABLE_PEOPLE, ORD_ID FROM TABLE_DATA ORDER BY TABLE_ID;";
+		String sql = "SELECT TABLE_ID ,TABLE_PEOPLE, ORD_ID, status FROM TABLE_DATA ORDER BY TABLE_ID;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Table> tableord = new ArrayList<Table>();
@@ -198,8 +200,9 @@ public class TableDaoMySQLImp implements Table_Dao {
 			while (rs.next()) {
 				int tableId = rs.getInt(1);
 				String tablePeople = rs.getString(2);
-				int ord_id = rs.getInt(3); 
-				Table table = new Table(tableId, tablePeople, ord_id);
+				int ord_id = rs.getInt(3);
+				boolean status = rs.getBoolean(4);
+				Table table = new Table(tableId, tablePeople, ord_id, status);
 				tableord.add(table);
 			}
 			return tableord;
@@ -247,6 +250,24 @@ public class TableDaoMySQLImp implements Table_Dao {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		return count;
+	}
+
+	@Override
+	public int updateStatus(Table table) {
+		int count = 0;
+		String sql = "UPDATE TABLE_DATA SET status = ? WHERE TABLE_ID = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setBoolean(1, table.isStatus());
+			ps.setInt(2, table.getTableId());
+			count = ps.executeUpdate();
+			if (count != 0) {
+				count = new BookingDaoMySQLImp().getbkId(table.getORD_ID()).getMember().getmember_Id();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return count;
 	}

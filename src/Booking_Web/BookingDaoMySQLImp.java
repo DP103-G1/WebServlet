@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import Table_Web.Table;
+import Table_Web.TableDaoMySQLImp;
 import member.Member;
 
 import static server_main.Common.CLASS_NAME;
@@ -211,17 +214,21 @@ public class BookingDaoMySQLImp implements BookingDao {
 	}
 
 	@Override
-	public int update(int bk_id, int member_id) {
+	public int update(Booking booking) {
 		int count = 0;
-		String sql = "UPDATE BOOKING SET STATUS = 0 WHERE BK_ID = ? AND MEMBER_ID = ?; ";
+		String sql = "UPDATE BOOKING SET STATUS = ? WHERE BK_ID = ? AND MEMBER_ID = ?; ";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, bk_id);
-			ps.setInt(2, member_id);
+			ps.setInt(1, booking.getStatus());
+			ps.setInt(2, booking.getBkId());
+			ps.setInt(3, booking.getMember().getmember_Id());
 			count = ps.executeUpdate();
+			if (booking.getStatus() == 2) {
+				count = new TableDaoMySQLImp().updateTableStatus(new Table(booking.getTableId(), booking.getBkId()));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
