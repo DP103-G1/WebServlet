@@ -64,7 +64,6 @@ public class OrderDaoMySQL implements OrderDao {
 					orderId = rs.getInt(1);
 					System.out.println(orderId);
 					Table table = new Table(tableid, orderId);
-					count = updateTableStatus(table);
 					List<MenuDetail> menuDetails = order.getMenuDetails();
 					psMenuDetail = connection.prepareStatement(sqlMenuDetail);
 					for (MenuDetail menuDetail : menuDetails) {
@@ -74,12 +73,13 @@ public class OrderDaoMySQL implements OrderDao {
 						psMenuDetail.setBoolean(4, menuDetail.isFOOD_ARRIVAL());
 						psMenuDetail.setInt(5, menuDetail.getTOTAL());
 						psMenuDetail.setBoolean(6, menuDetail.isFOOD_STATUS());
-						count = psMenuDetail.executeUpdate();
-						if (count == 0) {
+						if (psMenuDetail.executeUpdate() == 0) {
+							count = 0;
 							connection.rollback();
 							break;
 						}
 					}
+					count = orderId;
 					connection.commit();
 				} else {
 					count = 0;

@@ -6,7 +6,13 @@ import order.Order;
 
 public interface MenuDetailDao {
 	
-	List<MenuDetail> getAll();
+	/**
+	 * getAll is for kitchen
+	 * 
+	 * @return (1) all columns where FOOD_STATUS = 0 if type = "kitchen"
+	 * (2) all columns where FOOD_ARRIVAL = 0 if type = "waiter"
+	 */
+	List<MenuDetail> getAll(String type);
 	
 	int update(MenuDetail menuDetail);
 	

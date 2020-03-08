@@ -45,7 +45,8 @@ public class MenuDetailServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			List<MenuDetail> menuDetail = menuDetailDao.getAll();
+			String type = jsonObject.get("type").getAsString();
+			List<MenuDetail> menuDetail = menuDetailDao.getAll(type);
 			writeText(response, gson.toJson(menuDetail));
 		} else if (action.equals("update")) {
 			String menudetailJson = jsonObject.get("menuDetail").getAsString();
@@ -81,7 +82,7 @@ public class MenuDetailServlet extends HttpServlet {
 		if (menuDetailDao == null) {
 			menuDetailDao = new MenuDetailDaoMySQL();
 		}
-		List<MenuDetail> menuDetail = menuDetailDao.getAll();
+		List<MenuDetail> menuDetail = menuDetailDao.getAll("waiter");
 		writeText(response, new Gson().toJson(menuDetail));
 	}
 
