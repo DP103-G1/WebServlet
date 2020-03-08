@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import member.Member;
 
-
 import static server_main.Common.CLASS_NAME;
 import static server_main.Common.USER;
 import static server_main.Common.URL;
@@ -64,7 +63,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 		}
 		return count;
 	}
-
 	@Override
 	public Booking getbkId(int bkId) {
 		String sql = "SELECT `BOOKING`.MEMBER_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
@@ -94,7 +92,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 				int state = rs.getInt(13);
 				booking = new Booking(new Member(memberId, account, password, name, phone, state), 
 						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkStatus);
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -115,9 +112,11 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public List<Booking> getAll() {
+
+
 		String sql = "SELECT BK_ID, `BOOKING`.MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
-				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID;";
+				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID WHERE STATUS = 1;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Booking> bookingList = new ArrayList<Booking>();
@@ -130,7 +129,7 @@ public class BookingDaoMySQLImp implements BookingDao {
 				int memberId = rs.getInt(2);
 				int tableId = rs.getInt(3);
 				String bkTime = rs.getString(4);
-				Date bkDate = rs.getDate(5);
+				Date bkDate = rs.getTimestamp(5);
 				String bkChild = rs.getString(6);
 				String bkAdult = rs.getString(7);
 				String bkPhone = rs.getString(8);
@@ -141,11 +140,9 @@ public class BookingDaoMySQLImp implements BookingDao {
 				String phone = rs.getString(13);
 				int state = rs.getInt(14);
 				Booking booking = new Booking(new Member(memberId, account, password, name, phone, state), 
-						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkStatus, bkId);
-
+						tableId, bkTime, bkDate, bkChild, bkAdult, bkPhone,bkId,bkStatus);
 				bookingList.add(booking);
 			}
-
 			return bookingList;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -169,7 +166,7 @@ public class BookingDaoMySQLImp implements BookingDao {
 		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID "
-				+ "WHERE `BOOKING`.MEMBER_ID = ?;";
+				+ "WHERE `BOOKING`.MEMBER_ID = ? AND STATUS = 1;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -232,6 +229,7 @@ public class BookingDaoMySQLImp implements BookingDao {
 				if (ps != null) {
 					ps.close();
 				}
+	
 				if (connection != null) {
 					connection.close();
 				}

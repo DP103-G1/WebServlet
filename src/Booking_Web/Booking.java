@@ -45,7 +45,7 @@ public class Booking {
 		
 	}
 
-	public Booking( int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult,String bkPhone,int bkId,int bkStatus) {
+	public Booking(int tableId, String bkTime, Date bkDate, String bkChild, String bkAdult,String bkPhone,int bkId,int bkStatus) {
 		super();
 		this.tableId = tableId;
 		this.bkTime = bkTime;
