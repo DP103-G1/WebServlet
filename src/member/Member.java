@@ -9,6 +9,13 @@ public class Member {
 	private String phone;
 	private int state;
 	
+	public void Member(String password, String name, String phone,int state) {
+		this.state = state;
+		this.password = password;
+		this.name = name;
+		this.phone = phone;
+	}
+	
 	public Member(int member_Id, String account, String password, String name, String phone, int state) {
 		this.member_Id = member_Id;
 		this.account = account;

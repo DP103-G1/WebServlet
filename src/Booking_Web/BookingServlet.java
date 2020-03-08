@@ -31,6 +31,7 @@ public class BookingServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
+		System.out.println(jsonIn.toString());
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (bookingDao == null) {
 			bookingDao = new BookingDaoMySQLImp();

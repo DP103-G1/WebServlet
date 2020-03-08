@@ -60,8 +60,8 @@ public class MemberDaoMySqlImpl implements MemberDao {
 			ps.setString(1, member.getpassword());
 			ps.setString(2, member.getname());
 			ps.setString(3, member.getphone());
-			ps.setInt(4, member.getmember_Id());
-			ps.setInt(5, member.getState());
+			ps.setInt(4, member.getState());
+			ps.setInt(5, member.getmember_Id());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
