@@ -15,6 +15,7 @@ public class Booking {
 	private String bkPhone;
 	private int bkId;
 	private int bkStatus;
+
 	
 	public Booking(Member member, int tableId, 
 			String bkTime, Date bkDate, String bkChild, String bkAdult,

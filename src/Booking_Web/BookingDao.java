@@ -18,4 +18,6 @@ public interface BookingDao {
 	
 	int update(Booking booking);
 	
+	int deleteByStatus(int bkId );
+	
 }

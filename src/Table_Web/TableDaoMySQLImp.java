@@ -272,6 +272,4 @@ public class TableDaoMySQLImp implements Table_Dao {
 		return count;
 	}
 
-	
-
 }

@@ -247,4 +247,34 @@ public class BookingDaoMySQLImp implements BookingDao {
 		return count;
 	}
 
+	@Override
+	public int deleteByStatus(int bkId) {
+		int count = 0;
+		String sql = "UPDATE BOOKING SET STATUS = 0 WHERE BK_ID = ? ; ";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, bkId);
+			count = ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+	
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
 }
