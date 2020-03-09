@@ -19,4 +19,6 @@ public interface Table_Dao {
 	public int updateTableStatus(Table table);
 	
 	public int updateStatus(Table table);
+	
+	public Table getUsingTableByMemberId(int memberId);
 }
