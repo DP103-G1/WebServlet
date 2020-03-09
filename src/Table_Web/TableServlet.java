@@ -66,6 +66,10 @@ public class TableServlet extends HttpServlet {
 			String tableJson = jsonObject.get("table").getAsString();
 			count = tableDao.updateStatus(gson.fromJson(tableJson, Table.class));
 			writeText(response, String.valueOf(count));
+		} else if (action.equals("getUsingTableByMemberId")) {
+			int memberId = jsonObject.get("memberId").getAsInt();
+			Table table = tableDao.getUsingTableByMemberId(memberId);
+			writeText(response, gson.toJson(table));
 		} else {
 			writeText(response, "");
 		}

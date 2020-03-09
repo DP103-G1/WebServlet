@@ -272,4 +272,25 @@ public class TableDaoMySQLImp implements Table_Dao {
 		return count;
 	}
 
+	@Override
+	public Table getUsingTableByMemberId(int memberId) {
+		Table table = null;
+		String sql = "SELECT `TABLE_DATA`.TABLE_ID, TABLE_PEOPLE, ORD_ID, `TABLE_DATA`.status FROM `TABLE_DATA` "
+				+ "JOIN `BOOKING` ON `TABLE_DATA`.ORD_ID = `BOOKING`.BK_ID WHERE MEMBER_ID = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, memberId);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int tableId = rs.getInt(1);
+				String tablePeople = rs.getString(2);
+				int ordId = rs.getInt(3);
+				boolean status = rs.getBoolean(4);
+				table = new Table(tableId, tablePeople, ordId, status);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return table;
+	}
 }
