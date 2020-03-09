@@ -4,18 +4,23 @@ import java.util.List;
 
 public interface Table_Dao {
 	
-	public List<Table> getAll();
+	 List<Table> getAll();
 	
-	public Table getTableId(int tableId);
+	 Table getTableId(int tableId);
 	
-	public int insert(Table t);
+	 int insert(Table t);
 	
-	public int update(Table t);
+	 int update(Table t);
 	
-	public int deleteId(int tableId);
+	 int deleteId(int tableId);
 	
-	public List<Table> getAllOrdId();
+	 List<Table> getAllOrdId();
 	
-	public int updateTableStatus(Table table);
+	 int updateTableStatus(Table table);
 	
+	 int updateStatus(Table table);
+	
+	public Table getUsingTableByMemberId(int memberId);
+	
+	int updateStatusMemberId(int tableId);
 }

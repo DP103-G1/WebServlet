@@ -3,6 +3,7 @@ package order;
 import java.util.Date;
 import java.util.List;
 import Table_Web.Table;
+import member.Member;
 
 public interface OrderDao {
 
@@ -27,4 +28,6 @@ public interface OrderDao {
 	int updateTableStatus(Table table); 
 	
 	int updateBillStatis(Table table);
+	
+	int updateState(Member member);
 }

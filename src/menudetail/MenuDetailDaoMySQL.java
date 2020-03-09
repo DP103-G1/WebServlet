@@ -60,15 +60,26 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 		}
 		return count;
 	}
-	
+
 	@Override
-	public List<MenuDetail> getAll() {
-		String sql = "SELECT d.ORD_ID, d.MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS " + 
+	public List<MenuDetail> getAll(String type) {
+		String sqlPart = "";
+		switch (type) {
+		case "kitchen":
+			sqlPart = "STATUS";
+			break;
+		case "waiter":
+			sqlPart = "ARRIVAL";
+			break;
+		default:
+			return new ArrayList<MenuDetail>();
+		}
+		String sql = "SELECT d.ORD_ID, d.MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, d.FOOD_STATUS, o.MEMBER_ID " + 
 				"FROM MENU_DETAIL d " + 
 				"join MENU m on d.MENU_ID = m.MENU_ID " + 
 				"join ORDER_MEAL o on d.ORD_ID = o.ORD_ID " +
 				"join BOOKING b on o.BK_ID = b.BK_ID and o.MEMBER_ID = b.MEMBER_ID " +
-				"WHERE d.FOOD_STATUS = 0; ";
+				"WHERE d.FOOD_" + sqlPart + " = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MenuDetail> detaiList = new ArrayList<MenuDetail>();
@@ -85,7 +96,8 @@ public class MenuDetailDaoMySQL implements MenuDetailDao {
 				boolean FOOD_ARRIVAL = rs.getBoolean(6);
 				int TOTAL = rs.getInt(7);
 				boolean FOOD_STATUS = rs.getBoolean(8);
-				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS);
+				int memberId = rs.getInt(9);
+				MenuDetail menuDetail = new MenuDetail(ORD_ID, MENU_ID, TABLE_ID, FOOD_NAME, FOOD_AMOUNT, FOOD_ARRIVAL, TOTAL, FOOD_STATUS, memberId);
 				detaiList.add(menuDetail);
 			}
 			return detaiList;

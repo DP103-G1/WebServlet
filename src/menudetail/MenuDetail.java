@@ -13,6 +13,7 @@ public class MenuDetail {
 	private int ORD_TOTAL;
 	private boolean FOOD_STATUS;
 	private boolean ORD_BILL;
+	private int memberId;
 
 	public MenuDetail(int ORD_ID, String MENU_ID, int FOOD_AMOUNT, boolean FOOD_ARRIVAL, int TOTAL,
 			boolean FOOD_STATUS) {
@@ -57,6 +58,18 @@ public class MenuDetail {
 		this.FOOD_STATUS = FOOD_STATUS;
 	}
 	
+	public MenuDetail(int ORD_ID, String MENU_ID, int TABLE_ID, String FOOD_NAME, int FOOD_AMOUNT, boolean FOOD_ARRIVAL, int TOTAL, boolean FOOD_STATUS, int memberId) {
+		this.ORD_ID = ORD_ID;
+		this.MENU_ID = MENU_ID;
+		this.TABLE_ID = TABLE_ID;
+		this.FOOD_NAME = FOOD_NAME;
+		this.FOOD_AMOUNT = FOOD_AMOUNT;
+		this.FOOD_ARRIVAL = FOOD_ARRIVAL;
+		this.TOTAL = TOTAL;
+		this.FOOD_STATUS = FOOD_STATUS;
+		this.memberId = memberId;
+	}
+	
 	public MenuDetail(int ORD_ID, String MENU_ID, int TABLE_ID, String FOOD_NAME, int FOOD_AMOUNT, boolean FOOD_ARRIVAL, int TOTAL, int ORD_TOTAL, boolean FOOD_STATUS, boolean ORD_BILL) {
 		this.ORD_ID = ORD_ID;
 		this.MENU_ID = MENU_ID;
@@ -69,8 +82,6 @@ public class MenuDetail {
 		this.FOOD_STATUS = FOOD_STATUS;
 		this.setORD_BILL(ORD_BILL);
 	}
-	
-
 
 	@Override
 	public int hashCode() {
@@ -187,6 +198,14 @@ public class MenuDetail {
 
 	public void setORD_BILL(boolean oRD_BILL) {
 		ORD_BILL = oRD_BILL;
+	}
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
 	}
 
 

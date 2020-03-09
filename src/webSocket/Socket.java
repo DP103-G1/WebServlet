@@ -44,7 +44,12 @@ public class Socket {
 	
 	@OnError
 	public void onError(Session userSession, Throwable e) {
-		System.out.println(TAG + "Error:" + e.toString());
+		Set<String> userNames = sessionMap.keySet();
+		for (String userName : userNames) {
+			if (sessionMap.get(userName).equals(userSession)) {
+				System.out.println(TAG + "Error: " + userName + " " + e.toString());
+			}
+		}
 	}
 	
 	@OnClose

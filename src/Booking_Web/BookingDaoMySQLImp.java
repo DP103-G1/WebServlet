@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import Table_Web.Table;
+import Table_Web.TableDaoMySQLImp;
 import member.Member;
 
 import static server_main.Common.CLASS_NAME;
@@ -65,7 +68,7 @@ public class BookingDaoMySQLImp implements BookingDao {
 	}
 	@Override
 	public Booking getbkId(int bkId) {
-		String sql = "SELECT `BOOKING`.MEMBER_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, "
+		String sql = "SELECT `BOOKING`.MEMBER_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID WHERE BK_ID = ?;";
 		Connection conn = null;
@@ -112,6 +115,8 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public List<Booking> getAll() {
+
+
 		String sql = "SELECT BK_ID, `BOOKING`.MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID WHERE STATUS = 1;";
@@ -209,17 +214,51 @@ public class BookingDaoMySQLImp implements BookingDao {
 	}
 
 	@Override
-	public int update(int bk_id, int member_id) {
+	public int update(Booking booking) {
 		int count = 0;
-		String sql = "UPDATE BOOKING SET STATUS = 0 WHERE BK_ID = ? AND MEMBER_ID = ?; ";
+		String sql = "UPDATE BOOKING SET STATUS = ? WHERE BK_ID = ? AND MEMBER_ID = ?; ";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, bk_id);
-			ps.setInt(2, member_id);
+			ps.setInt(1, booking.getStatus());
+			ps.setInt(2, booking.getBkId());
+			ps.setInt(3, booking.getMember().getmember_Id());
 			count = ps.executeUpdate();
+			if (booking.getStatus() == 2) {
+				count = new TableDaoMySQLImp().updateTableStatus(new Table(booking.getTableId(), booking.getBkId()));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+	
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
+	@Override
+	public int deleteByStatus(int bkId) {
+		int count = 0;
+		String sql = "UPDATE BOOKING SET STATUS = 0 WHERE BK_ID = ? ; ";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, bkId);
+			count = ps.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -16,6 +16,8 @@ public interface BookingDao {
 	
 	List<Booking> getAllByMemberId(int memberId);
 	
-	int update(int bk_id, int member_id);
+	int update(Booking booking);
+	
+	int deleteByStatus(int bkId );
 	
 }

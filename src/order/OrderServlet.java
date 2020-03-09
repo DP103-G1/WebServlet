@@ -62,10 +62,6 @@ public class OrderServlet extends HttpServlet {
 			Order order = gson.fromJson(orderJson, Order.class);
 			int count = 0;
 			if (action.equals("add")) {
-				int bkid = orderDao.getBkid(order.getMEMBER_ID());
-				BookingDao bookingDao = new BookingDaoMySQLImp();
-				Booking booking = bookingDao.getbkId(bkid);
-				order.setBK_ID(bkid);
 				count = orderDao.add(order);
 			} else if (action.equals("update")) {
 				count = orderDao.update(order);

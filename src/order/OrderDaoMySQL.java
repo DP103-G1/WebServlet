@@ -18,6 +18,7 @@ import java.util.List;
 
 import Booking_Web.Booking;
 import box.Box;
+import member.Member;
 import java.util.List;
 import Table_Web.Table;
 import menudetail.MenuDetail;
@@ -58,13 +59,9 @@ public class OrderDaoMySQL implements OrderDao {
 				int orderId = 0;
 				psGetOrderId = connection.prepareStatement(sqlGetOrderId);
 				ResultSet rs = psGetOrderId.executeQuery();
-				int bkid = getBkid(order.getMEMBER_ID());
-				int tableid = gettableid(bkid);
 				if (rs.next()) {
 					orderId = rs.getInt(1);
 					System.out.println(orderId);
-					Table table = new Table(tableid, orderId);
-					count = updateTableStatus(table);
 					List<MenuDetail> menuDetails = order.getMenuDetails();
 					psMenuDetail = connection.prepareStatement(sqlMenuDetail);
 					for (MenuDetail menuDetail : menuDetails) {
@@ -74,12 +71,13 @@ public class OrderDaoMySQL implements OrderDao {
 						psMenuDetail.setBoolean(4, menuDetail.isFOOD_ARRIVAL());
 						psMenuDetail.setInt(5, menuDetail.getTOTAL());
 						psMenuDetail.setBoolean(6, menuDetail.isFOOD_STATUS());
-						count = psMenuDetail.executeUpdate();
-						if (count == 0) {
+						if (psMenuDetail.executeUpdate() == 0) {
+							count = 0;
 							connection.rollback();
 							break;
 						}
 					}
+					count = orderId;
 					connection.commit();
 				} else {
 					count = 0;
@@ -127,10 +125,13 @@ public class OrderDaoMySQL implements OrderDao {
 			ps.setInt(4, order.getORD_ID());
 			count = ps.executeUpdate();
 			if (count != 0) {
-				int bkid = getBkid(order.getMEMBER_ID());
+				int memId = order.getMEMBER_ID();
+				int bkid = getBkid(memId);
 				int tableid = gettableid(bkid);
-				Table table = new Table(tableid, null);
+				Table table = new Table(tableid, 0);
 				count = updateBillStatis(table);
+				Member member = new Member(memId, 0);
+				count = updateState(member);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -225,8 +226,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public List<Order> getAllByMemberId(int memberId) {
-		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL "
-				+ "WHERE MEMBER_ID = ? AND ORD_BILL = 1;";
+		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> orders = new ArrayList<Order>();
@@ -474,5 +474,21 @@ public class OrderDaoMySQL implements OrderDao {
 			}
 		}
 		return count;
+	}
+	
+	@Override
+	public int updateState(Member member) {
+		int count = 0;
+		String sql = "update EZeats.MEMBER set state = ? where member_id = ?;";
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, member.getState());
+			ps.setInt(2, member.getmember_Id());
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			return count;
 	}
 }
