@@ -225,7 +225,8 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public List<Order> getAllByMemberId(int memberId) {
-		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL WHERE MEMBER_ID = ?;";
+		String sql = "SELECT ORD_ID, MEMBER_ID, BK_ID, ORD_TOTAL, ORD_STATUS, ORD_BILL FROM ORDER_MEAL "
+				+ "WHERE MEMBER_ID = ? AND ORD_BILL = 1;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Order> orders = new ArrayList<Order>();
