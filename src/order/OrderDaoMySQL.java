@@ -113,16 +113,17 @@ public class OrderDaoMySQL implements OrderDao {
 	@Override
 	public int update(Order order) {
 		int count = 0;
-		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, ORD_TOTAL = ?, ORD_BILL = ? WHERE ORD_ID = ?";
+//		String sql = "UPDATE ORDER_MEAL SET MEMBER_ID = ?, ORD_TOTAL = ?, ORD_BILL = ? WHERE ORD_ID = ?";
+		String sql = "UPDATE ORDER_MEAL SET ORD_BILL = ? WHERE MEMBER_ID = ? AND ORD_BILL = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, order.getMEMBER_ID());
-			ps.setInt(2, order.getORD_TOTAL());
-			ps.setBoolean(3, order.isORD_BILL());
-			ps.setInt(4, order.getORD_ID());
+			ps.setInt(1, 1);
+			ps.setInt(2, order.getMEMBER_ID());
+//			ps.setBoolean(3, order.isORD_BILL());
+			ps.setInt(3, 0);
 			count = ps.executeUpdate();
 			if (count != 0) {
 				int memId = order.getMEMBER_ID();
