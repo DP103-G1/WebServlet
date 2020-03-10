@@ -115,8 +115,6 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public List<Booking> getAll() {
-
-
 		String sql = "SELECT BK_ID, `BOOKING`.MEMBER_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID WHERE STATUS = 1;";
@@ -166,10 +164,10 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public List<Booking> getAllByMemberId(int memberId) {
-		String sql = "SELECT BK_ID,TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
+		String sql = "SELECT BK_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID "
-				+ "WHERE `BOOKING`.MEMBER_ID = ? AND STATUS = 1;";
+				+ "WHERE `BOOKING`.MEMBER_ID = ? AND STATUS != 0;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
