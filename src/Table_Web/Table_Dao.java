@@ -22,5 +22,5 @@ public interface Table_Dao {
 	
 	public Table getUsingTableByMemberId(int memberId);
 	
-	int updateStatusMemberId(int tableId);
+	int updateBkId(int tableId);
 }

@@ -295,7 +295,7 @@ public class TableDaoMySQLImp implements Table_Dao {
 	}
 
 	@Override
-	public int updateStatusMemberId(int tableId) {
+	public int updateBkId(int tableId) {
 		int count = 0;
 		String sql = "UPDATE TABLE_DATA SET ORD_ID = 0 WHERE TABLE_ID = ?;";
 		Connection connection = null;

@@ -126,12 +126,9 @@ public class OrderDaoMySQL implements OrderDao {
 			ps.setInt(3, 0);
 			count = ps.executeUpdate();
 			if (count != 0) {
-				int memId = order.getMEMBER_ID();
-				int bkid = getBkid(memId);
-				int tableid = gettableid(bkid);
-				Table table = new Table(tableid, 0);
-				count = updateBillStatis(table);
-				Member member = new Member(memId, 0);
+				int memberId = order.getMEMBER_ID();
+				System.out.println(memberId);
+				Member member = new Member(memberId, 0);
 				count = updateState(member);
 			}
 		} catch (Exception e) {
@@ -265,7 +262,7 @@ public class OrderDaoMySQL implements OrderDao {
 
 	@Override
 	public int getBkid(int memberId) {
-		String sql = "SELECT BK_ID FROM EZeats.BOOKING where MEMBER_ID = ? order by BK_DATE desc limit 1;";
+		String sql = "SELECT BK_ID FROM EZeats.BOOKING where MEMBER_ID = ? and STATUS = 1 order by BK_DATE desc limit 1;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		int bkId = -1;

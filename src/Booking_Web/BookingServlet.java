@@ -74,7 +74,7 @@ public class BookingServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(json);
-//		System.out.println("output: " + json);
+		System.out.println("output: " + json);
 
 	}
 

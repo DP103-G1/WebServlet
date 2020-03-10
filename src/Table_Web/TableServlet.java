@@ -70,7 +70,13 @@ public class TableServlet extends HttpServlet {
 			int memberId = jsonObject.get("memberId").getAsInt();
 			Table table = tableDao.getUsingTableByMemberId(memberId);
 			writeText(response, gson.toJson(table));
-		} else {
+		} else if (action.equals("updateBkId")) {
+			int count = 0;
+			int tableId = jsonObject.get("tableId").getAsInt();
+			count = tableDao.updateBkId(tableId);
+			writeText(response, String.valueOf(count));
+		}
+		else {
 			writeText(response, "");
 		}
 	}
