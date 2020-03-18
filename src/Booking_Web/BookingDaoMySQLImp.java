@@ -167,7 +167,7 @@ public class BookingDaoMySQLImp implements BookingDao {
 		String sql = "SELECT BK_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID "
-				+ "WHERE `BOOKING`.MEMBER_ID = ? AND STATUS != 0;";
+				+ "WHERE `BOOKING`.MEMBER_ID = ? AND STATUS != 0 order by `BOOKING`.BK_ID desc;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<Booking> bookings = new ArrayList<Booking>();
