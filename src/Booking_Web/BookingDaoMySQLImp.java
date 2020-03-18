@@ -164,6 +164,8 @@ public class BookingDaoMySQLImp implements BookingDao {
 
 	@Override
 	public List<Booking> getAllByMemberId(int memberId) {
+
+
 		String sql = "SELECT BK_ID, TABLE_ID, BK_TIME, BK_DATE, BK_CHILD, BK_ADULT, `BOOKING`.PHONE, STATUS, "
 				+ "account, password, name, `member`.phone, state FROM `BOOKING` "
 				+ "JOIN `MEMBER` ON `MEMBER`.MEMBER_ID = `BOOKING`.MEMBER_ID "
